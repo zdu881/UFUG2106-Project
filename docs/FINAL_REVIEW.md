@@ -2,7 +2,7 @@
 
 ## Outcome
 
-Technical Stage 1 gates are supported by actual results: both programs pass 25/25 official cases; the optimized program meets 25/25 delay targets, versus 12/25 for the baseline. The optimized sum of case areas is 622,257 versus 1,103,455 (43.6083% lower), with smaller area on 23/25 cases. Median runtime rises from 4.628 ms to 604.023 ms. These are measured engineering results, not an official grade or proof of minimum area.
+Technical Stage 1 gates are supported by actual results: both programs pass 25/25 official cases; the optimized program meets 25/25 delay targets, versus 12/25 for the baseline. In the latest fresh snapshot (`results/stage1-final-20261110/`) the optimized sum of case areas is 622,816 versus 1,103,455 (43.56% lower), with smaller area on 23/25 cases. Median runtime rises from 4.628 ms to 603.945 ms. Deadline-truncated search can produce slightly different candidates on different runs; earlier runs measured 622,257 and 604.023 ms. These are measured engineering results, not an official grade or proof of minimum area.
 
 ## Requirement-by-requirement audit
 
@@ -20,9 +20,9 @@ Technical Stage 1 gates are supported by actual results: both programs pass 25/2
 | Verifier sensitivity | `results/final/regression.json` | Six corrupt-circuit classes rejected |
 | Source archive integrity and clean build | `artifacts/ufug2106-project-20261108/clean_package.json`, clean build/evaluator logs | Rebuilt extracted sources; 25/25 official PASS and 25/25 delay targets |
 | Report completeness | Six-page technical PDF | Method, proof outline, all 25 rows, tradeoffs, tests, reproduction and remaining gates |
-| Academic submission eligibility | Official Course Information p.16 | NOT CLEARED: published policy prohibits GAI completing assessments; later project exception unconfirmed |
+| AI assistance | Project-owner confirmation, 10 November 2026 | CONFIRMED for this project; students remain responsible for the work |
 | Team contributions | Canvas membership plus actual work log | Membership confirmed; student/teammate activities not invented |
-| Stage 2 | Official handout p.4 | INCOMPLETE: additional 25 cases and deadline not published |
+| Stage 2 | Official handout p.4 | INCOMPLETE: additional 25 cases and deadline not published; order-screening prototype exists |
 | Joint live Q&A | Official handout p.4 | FUTURE: both students must attend; date TBD |
 | Hidden-case grade | Official teacher evaluation | UNAVAILABLE; cannot infer it from local tests |
 
@@ -40,10 +40,10 @@ Technical Stage 1 gates are supported by actual results: both programs pass 25/2
 
 The exact official scoring formula and excellence cutoff are absent from the supplied material. A numerical forecast such as “95/100” would be unsupported. Aggregate area is not the official score. Time-limited search can produce different candidate counts on other CPUs; the retained CSVs report one actual run and the clean-extraction rerun is separate evidence. Arbitrarily tight future time/memory limits can still defeat the first construction.
 
-Do not mark the overall project complete: Stage 2 data, genuine contributions, live Q&A and assessment eligibility remain unresolved. No Canvas submission or message to the teammate/teacher has been sent.
+Do not mark the overall project complete: Stage 2 data, genuine contributions and live Q&A remain unresolved. No Canvas submission or message to the teammate/teacher has been sent.
 
 ## Follow-up review: Stage 2 comparator corrected
 
-The official Stage 2 requirement compares the Stage 1 method with the later improvement. The natural-order baseline is not automatically that comparator. The current optimized candidate has been frozen in `releases/stage1_candidate/` with a SHA-256 manifest. The actually adopted/submitted method still needs to be identified when eligible.
+The official Stage 2 requirement compares the Stage 1 method with the later improvement. The natural-order baseline is not automatically that comparator. The current optimized candidate has been frozen in `releases/stage1_candidate/`. The actually adopted/submitted method still needs to be identified.
 
 Added `tools/compare_stage_results.py`: it preserves failures, namespaces reused filenames by stage, rejects incomplete or duplicated case sets, and reports metrics only on valid paired results. Six targeted tests passed, including validity regressions/recoveries, zero-area cases, identical filenames across stages and invalid numeric data. On existing engineering-ablation CSVs it independently reproduces 25 paired passes, 12→25 target successes and 23 cases with smaller area. This run is explicitly an engineering ablation, not Stage 2 evidence.

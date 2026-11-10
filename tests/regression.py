@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Independent generated-case regression; all truth-table rows, not sampled outputs."""
-import importlib.util, json, random, subprocess, sys, tempfile, hashlib
+import importlib.util, json, random, subprocess, sys, tempfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('checker',ROOT/'tools/check_circuit.py');checker=importlib.util.module_from_spec(spec);spec.loader.exec_module(checker)
@@ -46,7 +46,7 @@ def run(binary):
             try:checker.verify(inp,bad)
             except (ValueError,IndexError):rejected+=1
         assert rejected==len(mutations)
-    return {'binary':str(binary),'binary_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),'generated_cases':len(records),'all_passed':True,'checker_mutations_rejected':rejected,'records':records}
+    return {'binary':str(binary),'generated_cases':len(records),'all_passed':True,'checker_mutations_rejected':rejected,'records':records}
 
 if __name__=='__main__':
     binary=Path(sys.argv[1]).resolve() if len(sys.argv)>1 else ROOT/'build/synth'

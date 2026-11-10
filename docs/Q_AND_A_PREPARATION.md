@@ -12,5 +12,6 @@ Use these as study prompts. Both teammates should be able to derive the answers 
 8. **Why check generated functions?** Published cases alone could miss constant handling, input-order errors, complementary outputs or a mapping bug. Independent exhaustive small-function testing exercises these mechanisms.
 9. **Why is 43.6% lower aggregate area not a grade?** Gate costs differ by case, the scoring formula is unpublished, and runtime increases. Report all axes rather than inventing a score.
 10. **What remains for Stage 2?** Compare the actual adopted Stage 1 method with the Stage 2 improvement on all 50 public cases, explain modifications and actual team contributions, and attend the joint Q&A. Hidden cases remain unknown.
+11. **What are the known resource risks?** The current synthesizer does not actively schedule against `ram_limit`, and its first construction is not a hard real-time fallback. Stage 2 work should address both without changing the frozen Stage 1 comparator.
 
 Small exercise from the handout: y0=x0 OR x1; y1=y0 AND x2. With OR area/delay=8/3 and AND=2/2, the shared circuit has area 10 and delay 5. Replacing OR by NOT/AND/NOT can lower area under the given NOT costs, but increases the critical path; derive that tradeoff before using the evaluator.

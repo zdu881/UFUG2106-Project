@@ -5,6 +5,7 @@ __pycache__/
 # Raw run snapshots contain instructor cases and evaluator binaries.
 results/
 # Local credentials and tooling.
+.opencode/
 .env
 .env.*
 .venv/

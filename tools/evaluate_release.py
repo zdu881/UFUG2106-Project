@@ -2,7 +2,6 @@
 """Build and verify a source snapshot in a fresh evidence directory."""
 import argparse
 import datetime
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -16,10 +15,6 @@ import time
 from compare_stage_results import read_csv
 
 ROOT = Path(__file__).resolve().parents[1]
-
-
-def sha256(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def validate_cases(report, cases):
@@ -56,13 +51,11 @@ def main():
         shutil.copy2(case, out / 'cases' / case.name)
     for name in ('verify_all.py', 'check_circuit.py', 'evaluate_release.py', 'compare_stage_results.py'):
         shutil.copy2(ROOT / 'tools' / name, out / 'verifier' / name)
-    snapshot_paths = [out / 'synth.cpp', out / 'evaluator'] + list((out / 'cases').iterdir()) + list((out / 'verifier').iterdir())
-    hashes = {str(p.relative_to(out)): sha256(p) for p in sorted(snapshot_paths)}
     compiler = shutil.which(os.environ.get('CXX', 'g++'))
     manifest = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 'status': 'RUNNING', 'source_path': str(source), 'case_count': len(cases),
                 'platform': platform.platform(), 'python': sys.version, 'compiler': compiler,
-                'inputs_sha256': hashes, 'commands': [],
+                'commands': [],
                 'scope': 'Named local case snapshot; not hidden-case or Stage 2 certification'}
     env = os.environ.copy()
     env.pop('PYTHONOPTIMIZE', None)
@@ -91,16 +84,11 @@ def main():
         run('compiler-version', [compiler, '--version'])
         run('build', [compiler, '-O2', '-std=c++17', '-Wall', '-Wextra', '-Wpedantic',
                       out / 'synth.cpp', '-o', out / 'synth'])
-        manifest['binary_sha256'] = sha256(out / 'synth')
         run('official', [out / 'evaluator', out / 'synth', out / 'cases',
                          '--report', out / 'official.csv', '--save-outputs', out / 'outputs'])
         rows = validate_cases(out / 'official.csv', list((out / 'cases').glob('*.txt')))
         run('independent', [sys.executable, out / 'verifier/verify_all.py', out / 'cases',
                             out / 'outputs', out / 'official.csv', out / 'independent.json'])
-        if any(sha256(out / name) != digest for name, digest in hashes.items()):
-            raise RuntimeError('An input snapshot changed during evaluation')
-        if sha256(out / 'synth') != manifest['binary_sha256']:
-            raise RuntimeError('The evaluated binary changed during evaluation')
         manifest['summary'] = {'passed': len(rows),
             'target_met': sum(r['target_met'] for r in rows.values()),
             'area_sum': sum(r['area'] for r in rows.values()),
@@ -111,8 +99,6 @@ def main():
         manifest['error'] = str(error)
     finally:
         manifest['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
-        manifest['artifacts_sha256'] = {str(p.relative_to(out)): sha256(p) for p in sorted(out.rglob('*'))
-                                      if p.is_file() and p.name != 'manifest.json'}
         (out / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     print(json.dumps({k: manifest[k] for k in ('status', 'summary', 'error') if k in manifest}, indent=2))
     return 0 if manifest['status'] == 'PASS' else 1

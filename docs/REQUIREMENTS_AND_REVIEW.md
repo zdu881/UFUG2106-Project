@@ -13,10 +13,10 @@ Source: official/869384-UFUG2106_Final_Project.pdf (Canvas file 869384), downloa
 | Runtime and memory limits | Official per-case measurements, stress tests | Verified for published Stage 1 inputs; see FINAL_REVIEW.md |
 | Area, delay, runtime optimization | Baseline comparison, per-case tables, held-out generated inputs | Verified for published Stage 1 inputs; see FINAL_REVIEW.md |
 | Stage 1: 25 cases, source ZIP, build README, PDF method/results | Extract/build/reproduce package | Verified for published Stage 1 inputs; see FINAL_REVIEW.md |
-| Stage 2: both methods on 50 published cases, contribution/teamwork record | Actual released data and authentic collaboration records | 25 additional cases not yet released |
+| Stage 2: both methods on 50 published cases, contribution/teamwork record | Actual released data and authentic collaboration records | 25 additional cases not yet released; order-screening prototype measured on Stage 1 cases |
 | Both students attend live Q&A | Actual attendance after date announced | Future requirement |
 | Final hidden evaluation (50 cases) | Teacher results | Not available locally |
-| AI-use eligibility | Updated project-specific allowance, if any | Course Information p.16 currently prohibits GAI completing assessment tasks; clarification requested |
+| AI assistance | Project-owner confirmation | Confirmed for this project; students remain responsible for understanding and presenting the work |
 
 The syllabus assigns 15% of the course grade to the project. The project specification says validity and area/delay/runtime affect scores, but provides no numerical scoring formula, reference optimum, or excellence cutoff. We will report technical evidence, not invent a predicted official score.
 
@@ -36,8 +36,8 @@ The syllabus assigns 15% of the course grade to the project. The project specifi
 2. Run official cases and identify dominant cost/delay bottlenecks.
 3. Add general algorithmic optimizations; use regression and held-out tests after each substantive change.
 4. Produce traceable results and method documentation, then audit all gates above.
-5. Keep final project completion open until Stage 2, Q&A, and submission eligibility are resolved.
+5. Keep final project completion open until Stage 2 and the live Q&A are resolved.
 
 ## Current review status
 
-See `FINAL_REVIEW.md` for the evidence audit. Stage 1 technical artifacts are built and checked; this does not close the academic-policy, Stage 2, teamwork or live Q&A gates.
+See `FINAL_REVIEW.md` for the evidence audit. Stage 1 technical artifacts are built and checked; this does not close the Stage 2, teamwork or live Q&A gates.

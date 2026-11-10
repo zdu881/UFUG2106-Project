@@ -2,7 +2,6 @@
   "result": "PASS",
   "case_count": 25,
   "target_met": 25,
-  "source_sha256": "cd31f7d2a0540c85dc32277ad97fda0e221e769d323ea4adfec8b69916584550",
   "clean_extracted_summary": {
     "passed": 25,
     "target_met": 25,

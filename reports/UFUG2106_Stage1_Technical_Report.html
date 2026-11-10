@@ -1,0 +1,174 @@
+<html lang="en"><meta charset="utf-8"><style>@page{size:A4;margin:17mm 17mm 18mm;@bottom-left{content:"UFUG2106 · STAGE 1 TECHNICAL REPORT";font-size:7.5pt;color:#777}@bottom-right{content:counter(page);font-size:9pt;color:#852d42}}body{font-family:"Liberation Sans",sans-serif;color:#272932;font-size:10.2pt;line-height:1.43}h1{color:#852d42;font-size:24pt;line-height:1.2;margin:0 0 13pt}h2{color:#852d42;font-size:13pt;margin:15pt 0 6pt}p{margin:7pt 0}li{margin:5pt 0}table{width:100%;border-collapse:collapse;font-size:9.3pt;margin:12pt 0}th{background:#f0e7eb;text-align:left}td,th{padding:7pt 5pt;border-bottom:1px solid #ddd}.results{font-size:8.6pt}.results td,.results th{text-align:right;padding:9pt 4pt}.results td:first-child,.results th:first-child{text-align:left}.page{break-before:page}.page:first-child{break-before:auto}.eyebrow{font-size:8.5pt;color:#777;margin-bottom:12pt}.note{padding:9pt;background:#f5f0f2;border-left:3px solid #852d42;font-size:9.2pt}pre{white-space:pre-wrap;background:#f5f5f5;padding:10pt;font-size:9pt}code{font-family:"DejaVu Sans Mono",monospace;font-size:8.7pt}tr{break-inside:avoid}.page:last-child td,.page:last-child th{padding:4pt 5pt}</style><body><section class="page"><div class="eyebrow">UFUG2106 · TRUTH TABLE TO CIRCUIT · 10 NOVEMBER 2026</div>
+<h1>Stage 1: Circuit synthesis</h1>
+<p><strong>Technical report · Group 2</strong><br>
+Prepared for Zeyun DU (50025854). Canvas teammate: Xinchen HUANG.</p>
+<div class="note">AI-assisted development. AI use has been confirmed for this project; this report records actual AI-assisted work and measurements. Students remain responsible for understanding and presenting the work.</div>
+
+<h2>Main result</h2>
+<p>The optimized program passes <strong>25/25</strong> published Stage 1 cases and meets <strong>25/25</strong> circuit-delay targets. The natural-order baseline also passes all cases but meets <strong>12/25</strong> targets. An independent checker confirms every output on all <strong>3,395,584 input assignments</strong>, and reproduces the official area and delay values.</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th style="text-align: right;">Baseline</th>
+<th style="text-align: right;">Optimized</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correct cases</td>
+<td style="text-align: right;">25 / 25</td>
+<td style="text-align: right;">25 / 25</td>
+</tr>
+<tr>
+<td>Delay targets met</td>
+<td style="text-align: right;">12 / 25</td>
+<td style="text-align: right;">25 / 25</td>
+</tr>
+<tr>
+<td>Sum of reported case areas</td>
+<td style="text-align: right;">1,103,455</td>
+<td style="text-align: right;">622,816</td>
+</tr>
+<tr>
+<td>Median synthesis runtime</td>
+<td style="text-align: right;">4.628 ms</td>
+<td style="text-align: right;">603.945 ms</td>
+</tr>
+</tbody>
+</table>
+<p>Total area falls by <strong>43.6%</strong>, and <strong>23/25</strong> cases have smaller circuits. The median per-case area ratio is <strong>0.510</strong>. Synthesis takes longer because the optimized program searches representations and mappings; all official runtime constraints are met.</p>
+<h2>Problem and contract</h2>
+<p>For n inputs and m outputs, construct a circuit equivalent to all 2<sup>n</sup> truth-table rows using AND2, OR2 and NOT. Input x0 is the most significant bit. Signal 0 is constant zero; IDs 1…n are inputs. Gates have consecutive IDs and refer only to smaller IDs. The final line lists exactly m output signals.</p>
+<p>Area is the sum of emitted gate costs; delay is the longest weighted path to an output. A delay-target violation affects quality but is not itself a correctness failure. Runtime and memory limits, when positive, are validity requirements. [Project handout, pp.1–3]</p></section><section class="page"><h1>Method and correctness</h1>
+<h2>Baseline: shared Shannon decisions</h2>
+<p>Recursively split the table in input order x0,…,x(n−1). Each decision has a low and high cofactor. Equal children eliminate the decision; identical triples (variable, low, high) share one node. Map a decision to:</p>
+<p><strong>f = (NOT x AND f0) OR (x AND f1).</strong></p>
+<p>Terminals and literal functions map directly. A structural gate table shares repeated operations, and a final reachability traversal removes unused gates and assigns consecutive output IDs.</p>
+<h2>Improved representation and mapping</h2>
+<ul>
+<li><strong>Complement sharing:</strong> one edge bit represents logical negation, reducing duplicated subfunctions.</li>
+<li><strong>Variable-order search:</strong> compare natural, reverse, influence-based and seeded local/random orders. Influence samples propose orders; every candidate still uses the complete truth table.</li>
+<li><strong>Cost-aware logic:</strong> compare sum-of-products, product-of-sums and De Morgan forms with the supplied gate costs and arrival times. Delay-oriented candidates can materialize both polarities instead of inserting an extra output inverter.</li>
+<li><strong>Two-level expansion:</strong> replace two sequential decisions with up to four path-conditioned terms and a balanced OR tree. This trades some extra gates for fewer sequential multiplexer stages.</li>
+<li><strong>Algebraic structure:</strong> verified cofactor implications simplify multiplexers; affine subfunctions become balanced XOR trees built from legal gates.</li>
+<li><strong>Associative balancing:</strong> flatten single-fanout AND/OR cones and combine early-arriving signals first. Shared cones retain their boundaries.</li>
+</ul>
+<p>Keep the completed baseline as a candidate. Rank complete, pruned circuits by delay excess, then area, then delay. Search uses at most 60% of the declared runtime allowance, capped at 1500 ms, with cooperative checks during BDD construction and mapping. A first valid candidate is built before optional search.</p>
+<h2>Why the transformations preserve the function</h2>
+<p>Shannon expansion selects exactly f0 for x=0 and f1 for x=1, so induction from the truth-table terminals proves the baseline. Complement normalization negates both children and the selected result. A four-way cover partitions assignments by two decisions, then ORs the selected cofactors. If f0 implies f1, f0 OR (x AND f1) selects the same value in both cases. Affine recognition checks that cofactors differ by a constant one. Associativity, idempotence, structural sharing and removal of unreachable gates preserve outputs.</p>
+<p>The method is heuristic, not a proof of minimum area or delay. Fixed-order construction visits O(m·2<sup>n</sup>) table positions; BDD size can still be exponential. The measured limits and tests are therefore essential evidence.</p></section><section class="page"><h1>Published results / 001–013</h1>
+<p>Every case below is <strong>PASS</strong> for both methods. Every optimized delay is at or below its target. Area and delay use the case-specific units; runtime is wall-clock program time measured by the official evaluator, excluding its correctness checks.</p><table class="results"><tr><th>Case</th><th>Target</th><th>Base area</th><th>Opt area</th><th>Base delay</th><th>Opt delay</th><th>Base ms</th><th>Opt ms</th></tr><tr><td>001</td><td>77</td><td>135885</td><td>55838</td><td>71</td><td>76</td><td>18.79</td><td>1510.39</td></tr><tr><td>002</td><td>61</td><td>21835</td><td>28847</td><td>66</td><td>37</td><td>10.10</td><td>1505.18</td></tr><tr><td>003</td><td>64</td><td>28206</td><td>26059</td><td>66</td><td>55</td><td>11.18</td><td>1505.56</td></tr><tr><td>004</td><td>57</td><td>7713</td><td>3215</td><td>57</td><td>57</td><td>3.54</td><td>602.22</td></tr><tr><td>005</td><td>36</td><td>1594</td><td>590</td><td>36</td><td>34</td><td>1.47</td><td>61.78</td></tr><tr><td>006</td><td>60</td><td>14272</td><td>5218</td><td>56</td><td>60</td><td>3.50</td><td>602.97</td></tr><tr><td>007</td><td>89</td><td>231712</td><td>106573</td><td>89</td><td>85</td><td>140.70</td><td>1516.95</td></tr><tr><td>008</td><td>62</td><td>15924</td><td>6437</td><td>56</td><td>59</td><td>3.67</td><td>603.57</td></tr><tr><td>009</td><td>59</td><td>33212</td><td>13461</td><td>56</td><td>59</td><td>4.63</td><td>603.95</td></tr><tr><td>010</td><td>61</td><td>9394</td><td>4792</td><td>75</td><td>30</td><td>29.59</td><td>1502.48</td></tr><tr><td>011</td><td>40</td><td>620</td><td>436</td><td>47</td><td>33</td><td>2.55</td><td>61.64</td></tr><tr><td>012</td><td>40</td><td>4157</td><td>4442</td><td>46</td><td>25</td><td>2.45</td><td>602.67</td></tr><tr><td>013</td><td>70</td><td>11826</td><td>10700</td><td>67</td><td>56</td><td>7.86</td><td>1503.41</td></tr></table><h2>Reading the tradeoff</h2>
+<p>The selection rule first removes delay violations, then reduces area. It can choose a larger circuit when this is needed to meet the target. Individual case results, rather than only a total, show that tradeoff.</p>
+<p>The area sum is a descriptive aggregate, not an official project score. Gate costs differ across cases, and no numerical grading formula or excellence threshold has been published in the supplied handout.</p>
+<h2>Measurement environment</h2>
+<p>Ubuntu 22.04.5 LTS, x86-64; GCC 11.4.0, <code>-O2 -std=c++17</code>. The course target is Ubuntu 22.04.3 with an AMD EPYC 7542 CPU. Measurements here are local, not claimed to be timings from that target server.</p></section><section class="page"><h1>Published results / 014–025</h1>
+<p>All values come from the retained baseline and optimized evaluator CSVs. The independent checker recalculates area and delay from the actual emitted files.</p><table class="results"><tr><th>Case</th><th>Target</th><th>Base area</th><th>Opt area</th><th>Base delay</th><th>Opt delay</th><th>Base ms</th><th>Opt ms</th></tr><tr><td>014</td><td>72</td><td>20808</td><td>11562</td><td>81</td><td>60</td><td>76.40</td><td>1504.29</td></tr><tr><td>015</td><td>81</td><td>38556</td><td>34395</td><td>76</td><td>81</td><td>24.30</td><td>1507.31</td></tr><tr><td>016</td><td>47</td><td>5008</td><td>2172</td><td>46</td><td>47</td><td>2.65</td><td>505.79</td></tr><tr><td>017</td><td>25</td><td>573</td><td>393</td><td>26</td><td>25</td><td>2.46</td><td>62.90</td></tr><tr><td>018</td><td>32</td><td>2933</td><td>1167</td><td>41</td><td>32</td><td>2.44</td><td>63.00</td></tr><tr><td>019</td><td>73</td><td>23692</td><td>4594</td><td>76</td><td>69</td><td>18.74</td><td>1503.04</td></tr><tr><td>020</td><td>35</td><td>824</td><td>634</td><td>36</td><td>35</td><td>2.64</td><td>61.73</td></tr><tr><td>021</td><td>72</td><td>69666</td><td>27966</td><td>72</td><td>60</td><td>20.93</td><td>1508.17</td></tr><tr><td>022</td><td>34</td><td>1286</td><td>1106</td><td>37</td><td>31</td><td>2.63</td><td>61.77</td></tr><tr><td>023</td><td>24</td><td>262</td><td>142</td><td>35</td><td>24</td><td>1.38</td><td>39.80</td></tr><tr><td>024</td><td>83</td><td>180822</td><td>165434</td><td>84</td><td>68</td><td>66.33</td><td>1532.37</td></tr><tr><td>025</td><td>76</td><td>242675</td><td>106643</td><td>71</td><td>76</td><td>27.43</td><td>1516.62</td></tr></table><h2>Timing and reproducibility</h2>
+<p>The optimized maximum reported runtime is <strong>1532.367 ms</strong>. All 25 runs satisfy their case runtime limits, including the 100 ms cases. A fixed random seed makes the search proposal sequence reproducible, but a wall-clock deadline can change how many proposals finish on another machine. Reproductions must retain their own emitted circuits and actual measurements.</p>
+<p>The baseline is preserved as a separate executable and source file. Both programs are single-threaded C++17 and require no external synthesis package or network access. The source-only archive contains code, build instructions, checking scripts and retained numerical evidence; use the instructor's cases and evaluator for official reruns.</p></section><section class="page"><h1>Review through experiments</h1>
+<h2>Does a shorter search suffice?</h2>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th style="text-align: right;">Pass</th>
+<th style="text-align: right;">Target met</th>
+<th style="text-align: right;">Area sum</th>
+<th style="text-align: right;">Total runtime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baseline</td>
+<td style="text-align: right;">25/25</td>
+<td style="text-align: right;">12/25</td>
+<td style="text-align: right;">1,103,455</td>
+<td style="text-align: right;">0.49 s</td>
+</tr>
+<tr>
+<td>250 ms search cap</td>
+<td style="text-align: right;">25/25</td>
+<td style="text-align: right;">24/25</td>
+<td style="text-align: right;">1,020,097</td>
+<td style="text-align: right;">5.04 s</td>
+</tr>
+<tr>
+<td>500 ms search cap</td>
+<td style="text-align: right;">25/25</td>
+<td style="text-align: right;">24/25</td>
+<td style="text-align: right;">817,788</td>
+<td style="text-align: right;">9.54 s</td>
+</tr>
+<tr>
+<td>1500 ms cap (retained)</td>
+<td style="text-align: right;">25/25</td>
+<td style="text-align: right;">25/25</td>
+<td style="text-align: right;">622,816</td>
+<td style="text-align: right;">22.05 s</td>
+</tr>
+</tbody>
+</table>
+<p>The 250 ms and 500 ms variants both miss case 024's delay target. The retained 1500 ms cap reaches all targets and produces smaller total area, at higher synthesis cost. This comparison supports the retained engineering choice; an unpublished runtime-weighted score could rank tradeoffs differently.</p>
+<h2>Independent correctness evidence</h2>
+<ul>
+<li><strong>Published inputs:</strong> all 3,395,584 assignments, every output. Independent results agree with official area and delay for both methods.</li>
+<li><strong>92 generated cases:</strong> all Boolean functions on 1, 2 and 3 inputs under three gate-cost settings; 80 seeded random multi-output cases; structured cases on 4, 8 and 12 inputs. All pass full-table checking.</li>
+<li><strong>Checker self-tests:</strong> six corrupt outputs are rejected, covering wrong behavior, nonconsecutive IDs, forward/self references, an illegal gate, output-count mismatch and invalid arity.</li>
+<li><strong>Sanitizers:</strong> the generated regression suite also passes AddressSanitizer and UndefinedBehaviorSanitizer with leak detection enabled.</li>
+<li><strong>Largest input dimension:</strong> a generated 20-input, 8-output case passes the official evaluator under a 10,000 ms runtime limit and 128 MiB memory cap. All 1,048,576 rows independently match; area 668, delay 68 ≤ 100.</li>
+</ul>
+<h2>Known limits</h2>
+<p>The tests do not prove optimality or predict hidden-case grades. BDD ordering can be costly for unstructured functions. The first construction and final output writing are not guaranteed to fit arbitrarily tiny supplied limits. The current synthesizer does not actively schedule against a positive RAM limit; the explicit memory-cap test adds evidence for one large structured instance, not a universal bound.</p></section><section class="page"><h1>Reproduction and project gates</h1>
+<h2>Commands</h2>
+<p>Run from the source root, with the teacher's evaluator and Stage 1 inputs in <code>official/</code>:</p>
+<pre><code class="language-bash">make
+python3 tools/evaluate_release.py --output results/a-new-run
+python3 tests/regression.py ./build/synth results/regression.json
+</code></pre>
+<p>The run directory must be new. Python verification uses NumPy; the synthesizer itself only needs the C++ standard library. <code>docs/METHOD.md</code> explains the transformations, and raw CSV/JSON logs retain the numerical evidence.</p>
+<h2>Completion review</h2>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Evidence / status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stage 1 format, source and compile instructions</td>
+<td>Standalone C++ sources and Makefile; README documents the interface</td>
+</tr>
+<tr>
+<td>Method and all 25 case results</td>
+<td>This report and retained official / independent outputs</td>
+</tr>
+<tr>
+<td>Technical correctness and resource tests</td>
+<td>Official, independent, generated, sanitizer and constrained stress checks</td>
+</tr>
+<tr>
+<td>AI assistance</td>
+<td>Confirmed for this project; students remain responsible for the work</td>
+</tr>
+<tr>
+<td>Actual student teamwork</td>
+<td>Canvas team known; contributions and division of work must reflect real activities</td>
+</tr>
+<tr>
+<td>Stage 2 comparison</td>
+<td>Additional 25 cases not yet released; both methods must be compared on all 50</td>
+</tr>
+<tr>
+<td>Live Q&amp;A</td>
+<td>Date TBD; both students must attend</td>
+</tr>
+<tr>
+<td>Hidden-case grading</td>
+<td>Teacher evaluation, unavailable locally</td>
+</tr>
+</tbody>
+</table>
+<h2>Next-stage plan</h2>
+<p>Compare the actual adopted Stage 1 method with the Stage 2 improvement on all 50 public cases. The current optimized candidate is frozen in releases/stage1_candidate; the simple baseline remains an engineering ablation. Stage 2 should also address RAM-limit scheduling and an early valid fallback under very small runtime limits. Retain real teamwork records and prepare to explain the method, correctness, delay calculation and area/runtime tradeoff in the joint Q&amp;A.</p>
+<p><strong>Sources:</strong> UFUG2106 Final Project, Canvas file 869384, pp.1–4; Course Information, Canvas file 785116. The syllabus assigns 15% of the course to the project; it does not provide an excellence cutoff.</p></section></body></html>
