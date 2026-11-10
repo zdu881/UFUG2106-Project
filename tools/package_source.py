@@ -4,7 +4,7 @@ from pathlib import Path
 import argparse,zipfile,hashlib,json
 ROOT=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--output',type=Path,default=ROOT.parents[1]/'artifacts/ufug2106-project-20261108')
+parser.add_argument('--output',type=Path,default=ROOT/'artifacts/ufug2106-project-20261108')
 parser.add_argument('--evidence',type=Path,help='Additional evaluation directory inside the project')
 args=parser.parse_args()
 OUT=args.output

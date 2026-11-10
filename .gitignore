@@ -10,3 +10,6 @@ results/
 .venv/
 .dev/
 *.sqlite3
+
+# Generated delivery packages.
+artifacts/

@@ -3,7 +3,7 @@
 from pathlib import Path
 import hashlib,json,zipfile,subprocess,shutil,xml.etree.ElementTree as ET
 from pypdf import PdfReader
-R=Path(__file__).resolve().parents[1];O=R.parents[1]/'artifacts/ufug2106-project-20261108';O.mkdir(parents=True,exist_ok=True)
+R=Path(__file__).resolve().parents[1];O=R/'artifacts/ufug2106-project-20261108';O.mkdir(parents=True,exist_ok=True)
 subprocess.run(['python3',str(R/'tools/package_source.py')],check=True)
 pdf=O/'UFUG2106_Stage1_Technical_Report_AI_Assisted.pdf'
 shutil.copy2(R/'reports'/pdf.name,pdf);shutil.copy2(R/'docs/FINAL_REVIEW.md',O/'REVIEW.md')

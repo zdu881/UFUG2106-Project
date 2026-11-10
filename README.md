@@ -1,5 +1,8 @@
 # UFUG2106 — Truth Table to Circuit
 
+Workspace: `~/2106Proj`. Coding-agent entry: [AGENTS.md](AGENTS.md);
+[OpenCode handoff](docs/WORKSPACE_HANDOFF.md).
+
 A single-threaded C++17 truth-table synthesizer, baseline, independent verifier, and reproducible experiments for the published Stage 1 cases.
 
 **Provenance and eligibility:** this workspace was developed with Codex assistance. The course syllabus p.16 prohibits GAI completing assessment tasks; no later project-specific exception has been confirmed. This is an explicitly AI-assisted engineering artifact, not evidence of independent student authorship or an already eligible course submission. See `docs/AI_WORK_LOG.md` and `docs/REQUIREMENTS_AND_REVIEW.md`.
