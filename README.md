@@ -22,7 +22,7 @@ The program reads the entire official input format, including optional limits. I
 
 ## Official evaluation
 
-The instructor-provided Linux evaluator and 25 case files are retained in the development workspace under `official/`. They are not bundled in the source-only archive; use your course copies when reproducing it.
+The instructor-provided Linux evaluator and 25 case files are included in this private repository under `official/`. They are not bundled in the source-only archive; use your course copies when reproducing it.
 
 ```bash
 mkdir -p results/reproduction
@@ -123,13 +123,12 @@ progress and actual rerun measurements in `docs/PROGRESS_20261110.md`.
 ## GitHub checkout
 
 This private repository contains project-authored source, documentation, tests,
-reports and selected measurement summaries. Instructor-provided files and raw
-run snapshots are intentionally kept in the local workspace.
+reports, selected measurement summaries, and the instructor-provided project
+materials in `official/`. Raw run snapshots remain local.
 
-After cloning, obtain the Stage 1 case archive and Linux evaluator from the
-course's Canvas assignment 30398. Extract the cases into `official/stage1/`,
-place the evaluator at `official/evaluator`, and make it executable. Then run
-`make` and the snapshot reproduction command above. Python verification needs
+After cloning on Linux x86, run `make` and the snapshot reproduction command
+above. The Stage 1 archive, its 25 extracted cases, and the executable evaluator
+are included. See `official/README.md` for original Canvas sources and hashes. Python verification needs
 NumPy; the C++ executable itself has no Python dependency. Original raw run paths
 in retained manifests refer to the development workstation; create a fresh run
 on your own machine for new provenance and outputs.
