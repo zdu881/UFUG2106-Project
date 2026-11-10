@@ -1,0 +1,7 @@
+{
+  "binary": "/home/nyz/canvasmonitor/projects/ufug2106/build/synth_sanitized",
+  "binary_sha256": "2c91099dea592f63e889e715d57a65aa6f53873bfffe725109cdaa33ef601a48",
+  "generated_cases": 92,
+  "all_passed": true,
+  "checker_mutations_rejected": 6
+}

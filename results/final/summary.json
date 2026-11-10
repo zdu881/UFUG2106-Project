@@ -1,0 +1,24 @@
+{
+  "baseline_pass": 25,
+  "optimized_pass": 25,
+  "baseline_target_met": 12,
+  "optimized_target_met": 25,
+  "baseline_area_sum": 1103455,
+  "optimized_area_sum": 622257,
+  "area_lower_cases": 23,
+  "area_ratio_median": 0.5101128379816905,
+  "optimized_runtime_median_ms": 604.023,
+  "optimized_runtime_max_ms": 1527.513,
+  "baseline_runtime_median_ms": 4.628,
+  "total_assignments": 3395584,
+  "compiler": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+  "host": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "hashes": {
+    "src/synth.cpp": "cd31f7d2a0540c85dc32277ad97fda0e221e769d323ea4adfec8b69916584550",
+    "src/baseline.cpp": "dcd95c291764c78e144066d7a04b8610b734a75be58f6224d4a1dd30cd2dc286",
+    "build/synth": "4fb86411cc1475422c45b6e292d02de7c66d819c31f1837c4243c8f3e9429145",
+    "build/baseline": "6a916e26f23ed670ba20f2dc289494785c82ec73a0c57c09d2ecf126c6414351",
+    "official/evaluator": "142361d7ce18bc47dea6a07538db79a588b3afbf446526c1d1246f4968b3d0ca"
+  },
+  "aggregate_area_reduction": 0.43608303011903526
+}

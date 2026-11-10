@@ -1,0 +1,34 @@
+{
+  "checked_at_utc": "2026-11-10T06:29:33.117798+00:00",
+  "assignment": {
+    "id": 30398,
+    "name": "Stage 1",
+    "due_at": "2026-11-19T15:59:59Z",
+    "updated_at": "2026-11-09T09:32:04Z",
+    "description": "<p><a class=\"instructure_file_link instructure_scribd_file inline_disabled\" title=\"UFUG2106_Final_Project.pdf\" href=\"https://hkust-gz.instructure.com/courses/3869/files/869384?wrap=1\" target=\"_blank\" data-api-endpoint=\"https://hkust-gz.instructure.com/api/v1/courses/3869/files/869384\" data-api-returntype=\"File\">Final_Project.pdf</a></p>\n<p><a class=\"instructure_file_link inline_disabled\" title=\"stage1.zip\" href=\"https://hkust-gz.instructure.com/courses/3869/files/869386?wrap=1\" target=\"_blank\" data-api-endpoint=\"https://hkust-gz.instructure.com/api/v1/courses/3869/files/869386\" data-api-returntype=\"File\">stage1.zip</a></p>\n<p><a class=\"instructure_file_link inline_disabled\" title=\"evaluator\" href=\"https://hkust-gz.instructure.com/courses/3869/files/869388?wrap=1\" target=\"_blank\" data-api-endpoint=\"https://hkust-gz.instructure.com/api/v1/courses/3869/files/869388\" data-api-returntype=\"File\">evaluator</a></p>\n<p><span>Note: The provided evaluator is the Linux x86 version we will use to test your program on the designated server. We also encourage you to build your own evaluator to support algorithm development, debugging, and testing.&nbsp;<br>You need to submit <strong>a</strong> <strong>zip file of source code</strong> and <strong>a report in pdf format</strong>.</span></p>",
+    "html_url": "https://hkust-gz.instructure.com/courses/3869/assignments/30398"
+  },
+  "files": [
+    {
+      "id": 869384,
+      "display_name": "Final_Project.pdf",
+      "size": 253405,
+      "updated_at": "2026-11-06T00:21:04Z",
+      "modified_at": "2026-11-05T13:34:34Z"
+    },
+    {
+      "id": 869386,
+      "display_name": "stage1.zip",
+      "size": 1315179,
+      "updated_at": "2026-11-05T13:35:18Z",
+      "modified_at": "2026-11-05T13:35:18Z"
+    },
+    {
+      "id": 869388,
+      "display_name": "evaluator",
+      "size": 6087664,
+      "updated_at": "2026-11-05T13:35:30Z",
+      "modified_at": "2026-11-05T13:35:30Z"
+    }
+  ]
+}

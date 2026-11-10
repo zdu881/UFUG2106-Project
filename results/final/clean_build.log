@@ -1,0 +1,4 @@
+mkdir -p build
+g++ -O2 -std=c++17 -Wall -Wextra -Wpedantic src/baseline.cpp -o build/baseline
+mkdir -p build
+g++ -O2 -std=c++17 -Wall -Wextra -Wpedantic src/synth.cpp -o build/synth

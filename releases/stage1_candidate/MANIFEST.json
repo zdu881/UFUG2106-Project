@@ -1,0 +1,9 @@
+{
+  "designation": "Stage 1 technical candidate, not a submitted release",
+  "source_file": "synth.cpp",
+  "source_sha256": "cd31f7d2a0540c85dc32277ad97fda0e221e769d323ea4adfec8b69916584550",
+  "build": "g++ -O2 -std=c++17 synth.cpp -o stage1_candidate",
+  "measurement_record": "results/final/optimized.csv",
+  "comparison_rule": "If this candidate is actually adopted for Stage 1, Stage 2 must compare against this method, not only src/baseline.cpp. Record the actual submitted source hash before starting Stage 2.",
+  "academic_eligibility": "unconfirmed; see docs/AI_WORK_LOG.md"
+}

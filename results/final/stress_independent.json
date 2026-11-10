@@ -1,0 +1,18 @@
+{
+  "independent": true,
+  "all_rows_checked": true,
+  "cases": [
+    {
+      "case": "case_101.txt",
+      "n": 20,
+      "m": 8,
+      "assignments": 1048576,
+      "gates": 286,
+      "area": 668,
+      "delay": 68,
+      "target": 100,
+      "target_met": true,
+      "valid": true
+    }
+  ]
+}

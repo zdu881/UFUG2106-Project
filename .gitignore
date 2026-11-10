@@ -1,0 +1,14 @@
+build/
+__pycache__/
+*.pyc
+
+# Instructor-provided materials stay local.
+official/
+# Raw run snapshots contain instructor cases and evaluator binaries.
+results/
+# Local credentials and tooling.
+.env
+.env.*
+.venv/
+.dev/
+*.sqlite3

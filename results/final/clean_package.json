@@ -1,0 +1,9 @@
+{
+  "directory": "/tmp/ufug2106-clean-package-odavyugp/UFUG2106_Project_Source",
+  "build_pass": true,
+  "source_sha256": "cd31f7d2a0540c85dc32277ad97fda0e221e769d323ea4adfec8b69916584550",
+  "evaluator_exit_code": 0,
+  "output_directory": "/tmp/ufug2106-clean-package-odavyugp/outputs",
+  "passed_cases": 25,
+  "delay_targets_met": 25
+}
