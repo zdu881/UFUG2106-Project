@@ -1,0 +1,2 @@
+# Keep evaluator CSV bytes intact: retained manifests hash the original CRLF files.
+*.csv -text whitespace=cr-at-eol
