@@ -68,7 +68,7 @@ pages = []
 pages.append(md(f'''<div class="eyebrow">UFUG2106 · TRUTH TABLE TO CIRCUIT · {args.date_label}</div>
 # Stage 1: Circuit synthesis
 **Technical report · Group 2**<br>
-Prepared for Zeyun DU (50025854). Canvas teammate: Xinchen HUANG.
+Prepared for Zeyun DU (50025854). Project collaborator: Jincan Li.
 
 <div class="note">AI-assisted development. AI use has been confirmed for this project; this report records actual AI-assisted work and measurements. Students remain responsible for understanding and presenting the work.</div>
 

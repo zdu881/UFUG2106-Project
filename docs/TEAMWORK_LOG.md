@@ -1,6 +1,6 @@
 # Teamwork record
 
-Canvas group: GROUP 2. Members: Zeyun DU (50025854) and Xinchen HUANG.
+Project group: GROUP 2. Members (updated by Zeyun DU): Zeyun DU (50025854) and Jincan Li.
 
 No teammate code or agreed division of work was provided at workspace creation. Do not replace this statement with invented activities.
 

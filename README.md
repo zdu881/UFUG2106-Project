@@ -7,7 +7,7 @@ A single-threaded C++17 truth-table synthesizer, baseline, independent verifier,
 
 **Provenance:** this workspace was developed with AI assistance. AI use has been confirmed for this project. The code and measurements are recorded transparently; students remain responsible for understanding and presenting the work. See `docs/AI_WORK_LOG.md` and `docs/REQUIREMENTS_AND_REVIEW.md`.
 
-Team membership recorded on Canvas: GROUP 2 — Zeyun DU and Xinchen HUANG. This does not attribute any unconfirmed contribution to either student.
+Project team (collaborator updated by Zeyun DU): GROUP 2 — Zeyun DU and Jincan Li. This does not attribute any unconfirmed contribution to either student.
 
 ## Build and execute
 

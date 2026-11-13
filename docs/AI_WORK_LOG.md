@@ -4,7 +4,7 @@
 
 AI assistance is confirmed for this project. Artifacts generated in this workspace are transparently AI-assisted; students remain responsible for understanding, reviewing and presenting the work accurately.
 
-Team membership from Canvas: Zeyun DU and Xinchen HUANG, GROUP 2. Contributions by Xinchen HUANG have not been established. This file does not assign them work retrospectively.
+Project team (collaborator updated by Zeyun DU): Zeyun DU and Jincan Li, GROUP 2. Contributions by Jincan Li have not been established. This file does not assign them work retrospectively.
 
 ## Actual development sequence, 2026-11-08
 
