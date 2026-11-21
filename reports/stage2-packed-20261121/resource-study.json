@@ -1,0 +1,172 @@
+{
+  "case024": [
+    {
+      "case_limit_ms": 100000,
+      "version": "old",
+      "round": 0,
+      "ms": 3018,
+      "area": 159633,
+      "delay": 69,
+      "valid": true,
+      "assignments": 262144
+    },
+    {
+      "case_limit_ms": 100000,
+      "version": "new",
+      "round": 0,
+      "ms": 3022,
+      "area": 124475,
+      "delay": 70,
+      "valid": true,
+      "assignments": 262144
+    },
+    {
+      "case_limit_ms": 2000,
+      "version": "new",
+      "round": 1,
+      "ms": 1252,
+      "area": 124475,
+      "delay": 70,
+      "valid": true,
+      "assignments": 262144
+    },
+    {
+      "case_limit_ms": 2000,
+      "version": "old",
+      "round": 1,
+      "ms": 1244,
+      "area": 161334,
+      "delay": 69,
+      "valid": true,
+      "assignments": 262144
+    },
+    {
+      "case_limit_ms": 3000,
+      "version": "old",
+      "round": 2,
+      "ms": 1826,
+      "area": 161016,
+      "delay": 69,
+      "valid": true,
+      "assignments": 262144
+    },
+    {
+      "case_limit_ms": 3000,
+      "version": "new",
+      "round": 2,
+      "ms": 1861,
+      "area": 124475,
+      "delay": 70,
+      "valid": true,
+      "assignments": 262144
+    },
+    {
+      "case_limit_ms": 100000,
+      "version": "new",
+      "round": 3,
+      "ms": 3021,
+      "area": 124475,
+      "delay": 70,
+      "valid": true,
+      "assignments": 262144
+    },
+    {
+      "case_limit_ms": 100000,
+      "version": "old",
+      "round": 3,
+      "ms": 3014,
+      "area": 124830,
+      "delay": 72,
+      "valid": true,
+      "assignments": 262144
+    },
+    {
+      "case_limit_ms": 100000,
+      "version": "old",
+      "round": 4,
+      "ms": 3042,
+      "area": 159633,
+      "delay": 69,
+      "valid": true,
+      "assignments": 262144
+    },
+    {
+      "case_limit_ms": 100000,
+      "version": "new",
+      "round": 4,
+      "ms": 3052,
+      "area": 124475,
+      "delay": 70,
+      "valid": true,
+      "assignments": 262144
+    }
+  ],
+  "memory": {
+    "case": "case_102.txt",
+    "hard_address_limit_kib": 65536,
+    "old_peak_rss_kib": 25476,
+    "old_verification": {
+      "case": "case_102.txt",
+      "n": 20,
+      "m": 8,
+      "assignments": 1048576,
+      "gates": 286,
+      "area": 668,
+      "delay": 68,
+      "target": 100,
+      "target_met": true,
+      "valid": true
+    },
+    "new_peak_rss_kib": 10112,
+    "new_verification": {
+      "case": "case_102.txt",
+      "n": 20,
+      "m": 8,
+      "assignments": 1048576,
+      "gates": 286,
+      "area": 668,
+      "delay": 68,
+      "target": 100,
+      "target_met": true,
+      "valid": true
+    },
+    "official_status": "MEMORY_LIMIT",
+    "official_wait4_kib": 106836,
+    "parent_controls": [
+      {
+        "parent_padding_mib": 0,
+        "after_exec_peak_kib": 10308,
+        "wait4_maxrss_kib": 10116,
+        "verification": {
+          "case": "case_102.txt",
+          "n": 20,
+          "m": 8,
+          "assignments": 1048576,
+          "gates": 286,
+          "area": 668,
+          "delay": 68,
+          "target": 100,
+          "target_met": true,
+          "valid": true
+        }
+      },
+      {
+        "parent_padding_mib": 96,
+        "after_exec_peak_kib": 10324,
+        "wait4_maxrss_kib": 104540,
+        "verification": {
+          "case": "case_102.txt",
+          "n": 20,
+          "m": 8,
+          "assignments": 1048576,
+          "gates": 286,
+          "area": 668,
+          "delay": 68,
+          "target": 100,
+          "target_met": true,
+          "valid": true
+        }
+      }
+    ]
+  }
+}

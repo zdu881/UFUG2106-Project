@@ -5,6 +5,7 @@ The caller must preserve evaluator provenance: CSV contents alone cannot prove w
 """
 import argparse,csv,json,math
 from pathlib import Path
+from statistics import median
 
 def read_csv(path):
     rows={}
@@ -55,6 +56,20 @@ def compare(pairs):
              'area_lower_on_both_pass':sum(r['area_delta']<0 for r in both),
              'area_equal_on_both_pass':sum(r['area_delta']==0 for r in both),
              'area_higher_on_both_pass':sum(r['area_delta']>0 for r in both)}
+    area_by_stage = {}
+    for label in sorted(labels):
+        paired = [r for r in both if r['stage'] == label]
+        deltas = [r['area_delta'] for r in paired]
+        total = sum(deltas)
+        best = min(deltas, default=0)
+        area_by_stage[label] = {
+            'both_pass_count': len(paired),
+            'total_area_delta': total if paired else None,
+            'median_area_delta': median(deltas) if paired else None,
+            'largest_saving_cases': [r['case'] for r in paired if r['area_delta'] == best and best < 0],
+            'total_excluding_one_largest_saving': total - best if best < 0 else None,
+        }
+    summary['paired_area_by_stage'] = area_by_stage
     return {'scope':'CSV comparison; actual release coverage and executable provenance must be verified separately',
             'stages':sorted(labels),'summary':summary,'cases':all_rows}
 

@@ -5,11 +5,14 @@
 #include <fstream>
 #include <iostream>
 #include <numeric>
+#include <new>
 #include <queue>
 #include <random>
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <tuple>
+#include <unistd.h>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -31,16 +34,60 @@ struct Hash {
         return x;
     }
 };
+// Each word holds 64 consecutive assignments for one output.
+struct TruthTable {
+    size_t column_words;
+    std::vector<uint64_t> words;
+    std::vector<uint32_t> support;
+    std::vector<long long> influence;
+
+    void resize(size_t rows, int outputs) {
+        column_words = (rows + 63) / 64;
+        words.resize(column_words * outputs);
+        support.resize(outputs);
+    }
+    int bit(size_t row, int output) const {
+        return (words[output * column_words + row / 64] >> (row % 64)) & 1;
+    }
+    size_t changed_pairs(size_t output, size_t stride) const {
+        const auto *col = words.data() + output * column_words;
+        size_t changes = 0;
+        if (stride < 64) {
+            // Select the lower member of each pair within a word.
+            uint64_t lower = UINT64_MAX / ((uint64_t(1) << stride) + 1);
+            for (size_t i = 0; i < column_words; ++i)
+                changes += __builtin_popcountll((col[i] ^ (col[i] >> stride)) & lower);
+        } else {
+            size_t span = stride / 64;
+            for (size_t base = 0; base < column_words; base += 2 * span)
+                for (size_t i = 0; i < span; ++i)
+                    changes += __builtin_popcountll(col[base+i] ^ col[base+span+i]);
+        }
+        return changes;
+    }
+    void analyze(int n) {
+        influence.resize(n);
+        for (int v = 0; v < n; ++v) {
+            const size_t stride = size_t(1) << (n - 1 - v);
+            for (size_t j = 0; j < support.size(); ++j) {
+                const size_t changes = changed_pairs(j, stride);
+                if (changes) support[j] |= uint32_t(1) << v;
+                influence[v] += changes;
+            }
+        }
+    }
+};
+
 struct Case {
     int n, m;
-    std::vector<unsigned char> table;
+    TruthTable table;
     long long area[3], delay[3], target, limit = 0, ram = 0;
     explicit Case(const char *path) {
         std::ifstream in(path);
         if (!(in >> n >> m) || n < 1 || n > 20 || m < 1)
             throw std::runtime_error("invalid dimensions");
         size_t rows = size_t(1) << n;
-        table.resize(rows * size_t(m));
+        table.resize(rows, m);
         std::string bits;
         for (size_t i = 0; i < rows; ++i) {
             if (!(in >> bits) || bits.size() != size_t(m))
@@ -48,9 +95,11 @@ struct Case {
             for (int j = 0; j < m; ++j) {
                 if (bits[j] != '0' && bits[j] != '1')
                     throw std::runtime_error("invalid bit");
-                table[i * m + j] = bits[j] - '0';
+                if (bits[j] == '1')
+                    table.words[j * table.column_words + i / 64] |= uint64_t(1) << (i % 64);
             }
         }
+        table.analyze(n);
         // op 0 NOT, 1 AND, 2 OR; official file order AND, OR, NOT.
         for (int k : {1, 2, 0})
             if (!(in >> area[k] >> delay[k]) || area[k] <= 0 || delay[k] <= 0)
@@ -67,6 +116,31 @@ struct Case {
     }
 };
 struct Timeout {};
+// Limit optional search using current RSS, with 25% headroom for finalization.
+// ru_maxrss can include the parent evaluator's peak across fork/exec.
+struct SearchMemory {
+    long long limit_kib = 0;
+    bool stopped = false;
+    bool available(size_t extra_bytes = 0) {
+        if (stopped)
+            return false;
+        if (!limit_kib)
+            return true;
+        std::ifstream statm("/proc/self/statm");
+        unsigned long long virtual_pages = 0, resident_pages = 0;
+        static const long page_bytes = sysconf(_SC_PAGESIZE);
+        const auto budget_kib = static_cast<unsigned long long>(limit_kib - limit_kib / 4);
+        const auto needed_kib = (extra_bytes + 1023) / 1024;
+        if (!(statm >> virtual_pages >> resident_pages) || page_bytes <= 0 ||
+            needed_kib >= budget_kib || resident_pages * (page_bytes / 1024) >= budget_kib - needed_kib)
+            stopped = true;
+        return !stopped;
+    }
+    void check() {
+        if (!available())
+            throw Timeout{};
+    }
+} search_memory;
 struct BNode {
     int var, lo, hi;
 };
@@ -113,26 +187,53 @@ class BDD {
         implications.emplace(key, result);
         return result;
     }
-    int build(int depth, size_t row, int output) {
-        if ((++calls & 65535) == 0 && Clock::now() > deadline)
-            throw Timeout{};
-        if (depth == c.n)
-            return c.table[row * size_t(c.m) + output];
-        int lo = build(depth + 1, row, output),
-            hi = build(depth + 1, row | (size_t(1) << (c.n - 1 - order[depth])), output);
+  private:
+    int two_var_literals[16]{}; // Literal + 1 for each possible four-row truth table.
+    int branch(int var, int lo, int hi) {
         if (lo == hi)
             return lo;
         int flip = hi & 1;
         lo ^= flip;
         hi ^= flip; // normalized high edge is regular
-        Key key{order[depth], lo, hi};
+        Key key{var, lo, hi};
         auto it = unique.find(key);
         if (it != unique.end())
             return it->second ^ flip;
         int lit = int(nodes.size()) * 2;
-        nodes.push_back({order[depth], lo, hi});
+        nodes.push_back({var, lo, hi});
         unique.emplace(key, lit);
         return lit ^ flip;
+    }
+
+  public:
+    int build(int depth, size_t row, int output) {
+        if ((++calls & 8191) == 0 && deadline != Clock::time_point::max()) {
+            search_memory.check();
+            if (Clock::now() > deadline)
+                throw Timeout{};
+        }
+        while (depth < c.n && !(c.table.support[output] & (uint32_t(1) << order[depth])))
+            ++depth;
+        if (depth == c.n)
+            return c.table.bit(row, output);
+        const int var = order[depth];
+        const size_t bit = size_t(1) << (c.n - 1 - var);
+        if (depth + 2 == c.n) {
+            const int last = order[depth + 1];
+            const size_t low = size_t(1) << (c.n - 1 - last);
+            auto at = [&](size_t offset) { return c.table.bit(row | offset, output); };
+            int f00 = at(0), f01 = at(low), f10 = at(bit), f11 = at(bit | low);
+            int &entry = two_var_literals[f00 | (f01 << 1) | (f10 << 2) | (f11 << 3)];
+            if (!entry) {
+                int lo = branch(last, f00, f01);
+                int hi = branch(last, f10, f11);
+                entry = 1 + branch(var, lo, hi);
+            }
+            return entry - 1;
+        }
+        int lo = build(depth + 1, row, output);
+        int hi = build(depth + 1, row | bit, output);
+        return branch(var, lo, hi);
     }
 };
 struct Gate {
@@ -144,10 +245,7 @@ struct Net {
     std::vector<Gate> gates;
     std::vector<int> outputs;
     long long area = 0, delay = 0;
-    void write(const char *path) const {
-        std::ofstream out(path);
-        if (!out)
-            throw std::runtime_error("cannot open output");
+    void write(std::ostream &out) const {
         bool one = std::find(outputs.begin(), outputs.end(), -1) != outputs.end();
         int offset = one ? 1 : 0;
         auto id = [&](int v) { return v == -1 ? n + 1 : v > n ? v + offset : v; };
@@ -192,8 +290,11 @@ class Mapper {
                (b > c.n && gates[b - c.n - 1].op == 0 && gates[b - c.n - 1].a == a);
     }
     int raw(int op, int a, int b = 0) {
-        if ((++calls & 1023) == 0 && Clock::now() > deadline)
-            throw Timeout{};
+        if ((++calls & 1023) == 0 && deadline != Clock::time_point::max()) {
+            search_memory.check();
+            if (Clock::now() > deadline)
+                throw Timeout{};
+        }
         if (op && a > b)
             std::swap(a, b);
         Key k{op, a, b};
@@ -257,6 +358,21 @@ class Mapper {
     }
     double local_score(int root, size_t start) const {
         long long area = 0;
+        const double timing = weight * double(at(root));
+        const int first = c.n + 1 + static_cast<int>(start);
+        if (root < first) return timing;
+        if (root - first < 64) {
+            uint64_t live = uint64_t(1) << (root - first);
+            while (live) {
+                int bit = 63 - __builtin_clzll(live);
+                live ^= uint64_t(1) << bit;
+                const Gate &g = gates[start + bit];
+                area += c.area[g.op];
+                if (g.a >= first) live |= uint64_t(1) << (g.a - first);
+                if (g.op && g.b >= first) live |= uint64_t(1) << (g.b - first);
+            }
+            return double(area) + timing;
+        }
         std::vector<int> stack{root};
         std::vector<unsigned char> seen(gates.size() - start);
         while (!stack.empty()) {
@@ -273,7 +389,7 @@ class Mapper {
             if (gates[j].op)
                 stack.push_back(gates[j].b);
         }
-        return double(area) + weight * double(at(root));
+        return double(area) + timing;
     }
     // Gate polarity choice via De Morgan. Trial gates are rolled back, not retained.
     int combine(int op, int a, int b) {
@@ -285,12 +401,8 @@ class Mapper {
         rollback(mark);
         int na = inv(a), nb = inv(b), other = inv(basic(3 - op, na, nb));
         double os = local_score(other, mark);
+        if (os + 1e-9 < ds) return other;
         rollback(mark);
-        if (os + 1e-9 < ds) {
-            na = inv(a);
-            nb = inv(b);
-            return inv(basic(3 - op, na, nb));
-        }
         return basic(op, a, b);
     }
     int mux_form(int s, int lo, int hi, bool product) {
@@ -320,8 +432,9 @@ class Mapper {
         rollback(mark);
         v = form(true);
         double second = local_score(v, mark);
+        if (second < first) return v;
         rollback(mark);
-        return form(second < first);
+        return form(false);
     }
     int map_affine(uint32_t mask) {
         using Item = std::pair<long long, int>;
@@ -610,41 +723,228 @@ Net balance(const Net &in, const Case &c) {
     return clean;
 }
 
+#include "round51/synthesis.hpp"
+#include "round51/shallow_table.hpp"
+
+static bool round51_supports(const Case &c) {
+    // The research mapper uses int arrival times and prices.
+    const auto max_cost = std::max(*std::max_element(c.area, c.area + 3),
+                                   *std::max_element(c.delay, c.delay + 3));
+    return max_cost <= INT_MAX / (8LL * c.n + 8) && c.target < 1000000000;
+}
+
+static r51::Graph typed_net(const Net &net) {
+    r51::Graph graph(net.n, int(net.outputs.size()));
+    const bool one = std::find(net.outputs.begin(), net.outputs.end(), -1) != net.outputs.end();
+    auto id = [&](int v) { return v == -1 ? net.n + 1 : v + (one && v > net.n); };
+    graph.nodes.reserve(graph.nodes.size() + net.gates.size() + one);
+    if (one) graph.nodes.push_back({2, 0, 0});
+    for (const auto &g : net.gates)
+        graph.nodes.push_back({(g.op + 2) % 3, id(g.a), g.op ? id(g.b) : 0});
+    for (int v : net.outputs) graph.outputs.push_back(id(v));
+    return graph;
+}
+
+// Both graphs implement the same output vector. Switch one output at a time,
+// charging a gate only while a live output or live parent still references it.
+static r51::Graph mix_outputs(const Case &c, const Net &best, const r51::Graph &trial,
+                              const r51::Costs &costs, Clock::time_point end) {
+    const size_t capacity = best.gates.size() + trial.nodes.size();
+    if (c.m < 2 || Clock::now() >= end || !search_memory.available(capacity * 96))
+        return {};
+    r51::Builder joined(trial);
+    joined.intern.reserve(capacity);
+    std::vector<int> ids(c.n + 1 + best.gates.size());
+    std::iota(ids.begin(), ids.begin() + c.n + 1, 0);
+    auto signal = [&](int v) { return v == -1 ? joined.add(2, 0, 0, costs) : ids[v]; };
+    for (size_t i = 0; i < best.gates.size(); ++i) {
+        if ((i & 4095) == 0 && Clock::now() >= end) return {};
+        auto g = best.gates[i];
+        ids[c.n + 1 + i] = joined.add((g.op + 2) % 3, signal(g.a), g.op ? signal(g.b) : 0, costs);
+    }
+    std::vector<int> chosen;
+    chosen.reserve(c.m);
+    for (int v : best.outputs) chosen.push_back(signal(v));
+    ids.resize(trial.nodes.size());
+    for (size_t i = c.n + 1; i < trial.nodes.size(); ++i) {
+        if ((i & 4095) == 0 && Clock::now() >= end) return {};
+        auto g = trial.nodes[i];
+        ids[i] = joined.add(g.op, ids[g.a], g.op == 2 ? 0 : ids[g.b], costs);
+    }
+
+    const auto &nodes = joined.graph.nodes;
+    std::vector<int> uses(nodes.size()), stack;
+    const int price[] = {costs.aa, costs.ao, costs.an};
+    long long area = 0;
+    auto change_use = [&](int root, int step) {
+        stack.push_back(root);
+        while (!stack.empty()) {
+            int id = stack.back();
+            stack.pop_back();
+            if (id <= c.n) continue;
+            uses[id] += step;
+            if (uses[id] != (step > 0 ? 1 : 0)) continue;
+            const auto &g = nodes[id];
+            area += step * static_cast<long long>(price[g.op]);
+            stack.push_back(g.a);
+            if (g.op != 2) stack.push_back(g.b);
+        }
+    };
+    std::multiset<int> delays;
+    for (int root : chosen) {
+        change_use(root, 1);
+        delays.insert(joined.ready[root]);
+    }
+    bool changed = false;
+    for (int j = 0; j < c.m; ++j) {
+        if (Clock::now() >= end) break;
+        int old = chosen[j], next = ids[trial.outputs[j]];
+        if (old == next) continue;
+        int old_delay = joined.ready[old], new_delay = joined.ready[next];
+        int previous_max = *delays.rbegin();
+        long long previous_area = area;
+        delays.erase(delays.find(old_delay));
+        int other_max = delays.empty() ? 0 : *delays.rbegin();
+        change_use(old, -1);
+        change_use(next, 1);
+        auto score = [&](int delay, long long cost, int local_delay) {
+            return std::make_tuple(std::max(0LL, delay - c.target), cost, delay, local_delay);
+        };
+        if (score(std::max(other_max, new_delay), area, new_delay) <
+            score(previous_max, previous_area, old_delay)) {
+            chosen[j] = next;
+            changed = true;
+        } else {
+            change_use(next, -1);
+            change_use(old, 1);
+        }
+        delays.insert(joined.ready[chosen[j]]);
+    }
+    return changed ? joined.finish(std::move(chosen)) : r51::Graph{};
+}
+
+// Compare completed Round 5.1 circuits in the same units as the BDD search.
+static void search_round51(const Case &c, Clock::time_point end, Net &best, size_t &completed) {
+    if (!search_memory.available() || Clock::now() >= end) return;
+    round51::Truth data{c.n, c.m, int(c.area[1]), int(c.delay[1]), int(c.area[2]),
+                        int(c.delay[2]), int(c.area[0]), int(c.delay[0]), c.table, c.table.influence};
+    r51::Costs costs{data.aa, data.da, data.ao, data.doo, data.an, data.dn};
+    auto rank = [&](long long area, long long delay) {
+        return std::make_tuple(std::max(0LL, delay - c.target), area, delay);
+    };
+    auto consider = [&](const r51::Graph &g) {
+        auto score = g.metric(costs);
+        if (!score.valid) return;
+        ++completed;
+        if (rank(score.area, score.delay) >= rank(best.area, best.delay)) return;
+        Net candidate{};
+        candidate.n = c.n;
+        candidate.area = score.area;
+        candidate.delay = score.delay;
+        candidate.outputs = g.outputs;
+        for (size_t id = c.n + 1; id < g.nodes.size(); ++id) {
+            auto gate = g.nodes[id];
+            candidate.gates.push_back({(gate.op + 1) % 3, gate.a, gate.b, 0});
+        }
+        best = std::move(candidate);
+    };
+    if (best.delay > c.target) {
+        // Keep time for the variable-order portfolio even on a dense table.
+        auto now = Clock::now();
+        consider(shallow_table(c, costs, now + (end - now) / 2));
+    }
+    auto refine_best = [&]() {
+        if (Clock::now() >= end || !search_memory.available()) return;
+        auto base = typed_net(best);
+        consider(round4_algebra::rewrite(base, costs));
+        if (Clock::now() >= end) return;
+        round4_phase::Engine phase(base, costs);
+        for (int polarity : {0, 1}) {
+            if (Clock::now() >= end || !search_memory.available()) break;
+            if (polarity) {
+                std::fill(phase.phase.begin() + c.n + 1, phase.phase.end(), 1);
+                phase.improve(4);
+            }
+            auto mapped = phase.construct();
+            consider(mapped);
+            if (Clock::now() < end)
+                consider(round4_algebra::rewrite(mapped, costs));
+        }
+    };
+    // Natural order already has a mapped circuit. Compare the opposite
+    // order and polish the winner before spending time on similar orders.
+    auto last_refined = rank(best.area, best.delay);
+    auto local_area = round51::Opt{"output-influence",false,true,false,1,0,true};
+    local_area.area_first = true;
+    auto regular = round51::Opt{"influence-desc",false,true,true,1,0};
+    regular.regular = true;
+    auto regular_reverse = regular;
+    regular_reverse.order = "reverse";
+    auto regular_local = regular;
+    regular_local.order = "output-influence";
+    auto decoder = local_area;
+    decoder.decoder = true;
+    auto reverse_decoder = decoder;
+    reverse_decoder.order = "reverse";
+    for (auto option : {round51::Opt{"reverse",true,false,true,1,0,true},
+                        local_area, regular, decoder, reverse_decoder, regular_reverse, regular_local,
+                        round51::Opt{"influence-desc",true,false,true,1,0,true},
+                        round51::Opt{"influence-desc",false,true,true,1,0,true},
+                        round51::Opt{"natural",true,false,true,1,0,false},
+                        round51::Opt{"rotate",true,false,true,1,0,true},
+                        round51::Opt{"influence-asc",true,false,true,1,0,true}}) {
+        if (Clock::now() >= end || !search_memory.available()) break;
+        auto graph = round51::run_synth(data, option, end);
+        auto score = graph.metric(costs);
+        auto keep = [&](r51::Graph next) {
+            auto value = next.metric(costs);
+            if (value.valid && rank(value.area, value.delay) < rank(score.area, score.delay)) {
+                graph = std::move(next);
+                score = value;
+            }
+        };
+        if (Clock::now() < end) keep(r51::rebalance(graph, costs));
+        if (Clock::now() < end) keep(r51::area_recover(graph, costs, int(c.target), 0));
+        auto mixed = mix_outputs(c, best, graph, costs, end);
+        consider(graph);
+        if (mixed.valid) consider(mixed);
+        if (option.order == "reverse") {
+            refine_best();
+            last_refined = rank(best.area, best.delay);
+        }
+    }
+    if (rank(best.area, best.delay) < last_refined) refine_best();
+}
+
 int main(int argc, char **argv) {
     try {
         auto start = Clock::now();
         if (argc != 3)
             throw std::runtime_error("usage: synth INPUT OUTPUT");
         Case c(argv[1]);
+        search_memory.limit_kib = c.ram;
         // Search is deterministic in order; deadline truncates it on constrained cases.
-        double budget_ms = c.limit > 0 ? std::min(1500.0, 0.60 * double(c.limit)) : 1500.0;
-        auto deadline = start + std::chrono::microseconds(static_cast<long long>(budget_ms * 1000));
+        double budget_ms = c.limit > 0 ? std::min(1800.0, 0.45 * double(c.limit)) : 1800.0;
+        auto end = start + std::chrono::microseconds(static_cast<long long>(budget_ms * 1000));
+        const bool use_round51 = round51_supports(c);
+        auto deadline = use_round51 ? start + (end - start) / 2 : end;
         std::vector<int> order(c.n);
         std::iota(order.begin(), order.end(), 0);
         std::mt19937 random(2106);
-        std::vector<long long> influence(c.n);
-        size_t rows = size_t(1) << c.n;
-        size_t samples = std::min(rows, size_t(4096));
-        for (size_t j = 0; j < samples; ++j) {
-            size_t row = samples == rows ? j : size_t(random()) % rows;
-            for (int v = 0; v < c.n; ++v) {
-                size_t other = row ^ (size_t(1) << (c.n - 1 - v));
-                for (int k = 0; k < c.m; ++k)
-                    influence[v] += c.table[row * c.m + k] != c.table[other * c.m + k];
-            }
-        }
         std::vector<int> descending = order;
         std::stable_sort(descending.begin(), descending.end(),
-                         [&](int a, int b) { return influence[a] > influence[b]; });
+                         [&](int a, int b) { return c.table.influence[a] > c.table.influence[b]; });
         std::vector<int> best_order = order;
         Net best;
-        bool have = false;
         size_t completed = 0;
+        std::vector<std::pair<std::tuple<long long, long long, long long>, std::vector<int>>> measured;
         auto rank = [&](const Net &x) {
             return std::tuple<long long, long long, long long>(std::max(0LL, x.delay - c.target),
                                                                x.area, x.delay);
         };
-        auto map_order = [&](const std::vector<int> &ord, bool plain_first, Clock::time_point end) {
+        auto map_order = [&](const std::vector<int> &ord, bool plain_first, Clock::time_point end,
+                             const std::vector<double> &weights, bool stop_at_target = false) {
+            if (!plain_first) search_memory.check();
             BDD bdd(c, ord, plain_first ? Clock::time_point::max() : end);
             std::vector<int> roots;
             for (int j = 0; j < c.m; ++j)
@@ -655,36 +955,81 @@ int main(int argc, char **argv) {
                 Net balanced = balance(best, c);
                 if (rank(balanced) < rank(best))
                     best = std::move(balanced);
-                have = true;
                 ++completed;
                 return;
             }
-            for (double w : {16.0, 4.0, 1.0, 0.0}) {
+            for (double w : weights) {
                 if (Clock::now() > end)
                     break;
+                search_memory.check();
                 Mapper mapper(c, bdd, w, false, false, end);
                 Net candidate = mapper.finish(roots);
                 ++completed;
                 Net balanced = balance(candidate, c);
                 if (rank(balanced) < rank(candidate))
                     candidate = std::move(balanced);
-                if (!have || rank(candidate) < rank(best)) {
+                bool meets_target = candidate.delay <= c.target;
+                auto measured_it = std::find_if(measured.begin(), measured.end(),
+                    [&](const auto &entry) { return entry.second == ord; });
+                if (measured_it == measured.end())
+                    measured.emplace_back(rank(candidate), ord);
+                else if (rank(candidate) < measured_it->first)
+                    measured_it->first = rank(candidate);
+                if (rank(candidate) < rank(best)) {
                     best = std::move(candidate);
                     best_order = ord;
-                    have = true;
                 }
+                if (stop_at_target && meets_target) break;
             }
         };
-        // A first candidate is always completed. Natural order then gets the
-        // same optimized mapping pass that earlier versions applied directly.
-        map_order(order, true, Clock::time_point::max());
-        best_order = order;
-        if (Clock::now() < deadline) {
-            try {
-                map_order(order, false, deadline);
-            } catch (const Timeout &) {
-            }
+        // Complete the fallback before starting optional search.
+        map_order(order, true, Clock::time_point::max(), {});
+        auto write_best = [&]() {
+            std::ofstream output(argv[2]);
+            best.write(output);
+            output.close();
+            if (!output) throw std::runtime_error("output write failed");
+            std::cerr << "candidates=" << completed << " area=" << best.area << " delay=" << best.delay
+                      << " target=" << c.target << " ram_search_stopped=" << search_memory.stopped << '\n';
+        };
+        if (best.area == 0 && best.delay == 0) {
+            write_best();
+            return 0;
         }
+        auto try_map_order = [&](const std::vector<int> &ord, Clock::time_point end,
+                                 const std::vector<double> &weights, bool stop_at_target = false) {
+            try {
+                map_order(ord, false, end, weights, stop_at_target);
+                return true;
+            } catch (const Timeout &) {
+            } catch (const std::bad_alloc &) {
+                search_memory.stopped = true;
+            }
+            return false;
+        };
+        if (descending != order && Clock::now() < deadline)
+            try_map_order(descending, deadline, {1.0, 16.0}, true);
+        // Sampling can separate nearly tied influence counts differently.
+        // Compare that order on the complete table before sweeping more weights.
+        const size_t rows = size_t(1) << c.n;
+        if (rows > 4096 && Clock::now() < deadline && search_memory.available()) {
+            std::vector<long long> sampled(c.n);
+            for (int j = 0; j < 4096; ++j) {
+                const size_t row = random() % rows;
+                for (int v = 0; v < c.n; ++v) {
+                    const size_t other = row ^ (size_t(1) << (c.n - 1 - v));
+                    for (int k = 0; k < c.m; ++k)
+                        sampled[v] += c.table.bit(row, k) != c.table.bit(other, k);
+                }
+            }
+            auto sampled_order = order;
+            std::stable_sort(sampled_order.begin(), sampled_order.end(),
+                             [&](int a, int b) { return sampled[a] > sampled[b]; });
+            if (sampled_order != descending && sampled_order != order)
+                try_map_order(sampled_order, deadline, {1.0}, true);
+        }
+        if (Clock::now() < deadline)
+            try_map_order(order, deadline, {16.0, 4.0, 1.0, 0.0});
 
         // Stage 2 order screening: generate a wider pool, rank by BDD node count,
         // and spend the remaining budget mapping only the most promising orders.
@@ -699,17 +1044,22 @@ int main(int argc, char **argv) {
             std::reverse(reversed.begin(), reversed.end());
             pool.push_back(std::move(reversed));
         }
-        for (int k = 0; k < 20; ++k) {
-            std::vector<int> candidate = order;
-            std::shuffle(candidate.begin(), candidate.end(), random);
-            pool.push_back(std::move(candidate));
-        }
+        auto shuffle_random = random;
         for (int k = 0; k < 24; ++k) {
-            std::vector<int> candidate = (k % 2) ? descending : best_order;
-            int a = int(random() % c.n), b = int(random() % c.n);
-            int var = candidate[a];
-            candidate.erase(candidate.begin() + a);
-            candidate.insert(candidate.begin() + b, var);
+            auto shuffled = order;
+            std::shuffle(shuffled.begin(), shuffled.end(), shuffle_random);
+            pool.push_back(std::move(shuffled));
+            std::vector<int> candidate;
+            if (k % 3 == 2) {
+                candidate = order;
+                std::shuffle(candidate.begin(), candidate.end(), random);
+            } else {
+                candidate = k % 3 == 0 ? best_order : descending;
+                int from = int(random() % c.n), to = int(random() % c.n);
+                int var = candidate[from];
+                candidate.erase(candidate.begin() + from);
+                candidate.insert(candidate.begin() + to, var);
+            }
             pool.push_back(std::move(candidate));
         }
         std::vector<std::vector<int>> unique;
@@ -718,85 +1068,73 @@ int main(int argc, char **argv) {
                 unique.push_back(candidate);
         pool.swap(unique);
 
-        // Stage 1 portfolio phase: keep the original order-search sequence so a
-        // wider Stage 2 search cannot accidentally discard its best circuit.
-        std::vector<int> stage_order = order;
-        std::vector<std::vector<int>> already{order};
-        auto stage1_deadline = Clock::now();
-        if (stage1_deadline < deadline) {
-            double left = std::chrono::duration<double, std::milli>(deadline - stage1_deadline).count();
-            stage1_deadline += std::chrono::microseconds(static_cast<long long>(0.0 * left * 1000));
-        }
-        for (int trial = 1; trial < 32; ++trial) {
-            if (Clock::now() > stage1_deadline)
-                break;
-            if (trial == 1)
-                stage_order = descending;
-            else if (trial == 2) {
-                stage_order = descending;
-                std::reverse(stage_order.begin(), stage_order.end());
-            } else if (trial == 3) {
-                stage_order = order;
-                std::reverse(stage_order.begin(), stage_order.end());
-            } else if (trial % 3 != 0) {
-                stage_order = best_order;
-                int a = int(random() % c.n), b = int(random() % c.n);
-                int var = stage_order[a];
-                stage_order.erase(stage_order.begin() + a);
-                stage_order.insert(stage_order.begin() + b, var);
-            } else {
-                stage_order = order;
-                std::shuffle(stage_order.begin(), stage_order.end(), random);
-            }
-            try {
-                map_order(stage_order, false, stage1_deadline);
-                if (std::find(already.begin(), already.end(), stage_order) == already.end())
-                    already.push_back(stage_order);
-            } catch (const Timeout &) {
-                break;
-            }
-        }
-
         std::vector<std::pair<size_t, int>> scored;
         auto now = Clock::now();
-        if (now < deadline) {
+        if (now < deadline && search_memory.available()) {
             double left = std::chrono::duration<double, std::milli>(deadline - now).count();
             auto screening_deadline =
                 now + std::chrono::microseconds(static_cast<long long>(0.35 * left * 1000));
             for (size_t i = 0; i < pool.size(); ++i) {
-                if (Clock::now() > screening_deadline)
+                if (Clock::now() > screening_deadline || !search_memory.available())
                     break;
                 try {
                     BDD screen_bdd(c, pool[i], screening_deadline);
-                    std::vector<int> roots;
                     for (int j = 0; j < c.m; ++j)
-                        roots.push_back(screen_bdd.build(0, 0, j));
+                        screen_bdd.build(0, 0, j);
                     scored.emplace_back(screen_bdd.nodes.size(), int(i));
                 } catch (const Timeout &) {
+                    break;
+                } catch (const std::bad_alloc &) {
+                    search_memory.stopped = true;
                     break;
                 }
             }
         }
         std::sort(scored.begin(), scored.end());
-        size_t mapped_orders = 0;
+        // Node count proposes a shortlist; actual reachable mapped area/delay
+        // decides which orders receive further weights. Give each probe a fair
+        // share so a slow first order cannot consume the entire mapping budget.
+        std::vector<std::vector<int>> shortlist;
+        auto add_order = [&](const std::vector<int> &candidate) {
+            if (candidate != order &&
+                std::find(shortlist.begin(), shortlist.end(), candidate) == shortlist.end())
+                shortlist.push_back(candidate);
+        };
         for (const auto &entry : scored) {
-            if (mapped_orders >= 4 || Clock::now() > deadline)
-                break;
-            const auto &candidate = pool[entry.second];
-            if (std::find(already.begin(), already.end(), candidate) != already.end())
-                continue;
-            ++mapped_orders;
-            try {
-                map_order(candidate, false, deadline);
-            } catch (const Timeout &) {
-                break;
-            }
+            add_order(pool[entry.second]);
+            if (shortlist.size() >= 4) break;
         }
-        if (!have)
-            throw std::runtime_error("no circuit constructed");
-        best.write(argv[2]);
-        std::cerr << "candidates=" << completed << " area=" << best.area << " delay=" << best.delay
-                  << " target=" << c.target << '\n';
+        add_order(descending);
+        auto reversed = descending;
+        std::reverse(reversed.begin(), reversed.end());
+        add_order(reversed);
+        now = Clock::now();
+        auto probe_deadline = now + (deadline - now) * 2 / 3;
+        for (size_t i = 0; i < shortlist.size(); ++i) {
+            now = Clock::now();
+            if (now >= probe_deadline || !search_memory.available()) break;
+            auto end = now + (probe_deadline - now) / (shortlist.size() - i);
+            try_map_order(shortlist[i], end, {4.0});
+        }
+        // Copy before refinement: map_order updates measured entries.
+        auto refinement = measured;
+        std::stable_sort(refinement.begin(), refinement.end(),
+                         [](const auto &a, const auto &b) { return a.first < b.first; });
+        for (const auto &entry : refinement) {
+            if (Clock::now() >= deadline || !search_memory.available()) break;
+            if (entry.second == order) continue; // already tried all weights
+            if (!try_map_order(entry.second, deadline, {1.0, 0.0, 16.0}))
+                break;
+        }
+        try {
+            if (use_round51)
+                search_round51(c, end, best, completed);
+        } catch (const round51::CandidateTimeout &) {
+            // Completed candidates are already in best.
+        } catch (const std::bad_alloc &) {
+            search_memory.stopped = true;
+        }
+        write_best();
     } catch (const std::exception &e) {
         std::cerr << e.what() << '\n';
         return 1;

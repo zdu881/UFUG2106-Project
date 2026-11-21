@@ -26,4 +26,15 @@ class ComparisonTests(unittest.TestCase):
     def test_deltas(self):
         a=self.csv('a.csv','x,PASS,12,5,1,yes\n');b=self.csv('b.csv','x,PASS,8,6,3,no\n');r=m.compare([('s',a,b)])['cases'][0]
         self.assertEqual((r['area_delta'],r['delay_delta'],r['runtime_delta_ms']),(-4,1,2))
+    def test_area_sensitivity_keeps_failed_cases_out_and_stages_separate(self):
+        old = self.csv('old.csv', 'a,PASS,20,5,1,yes\nb,PASS,10,5,1,yes\nc,PASS,7,5,1,yes\n')
+        new = self.csv('new.csv', 'a,PASS,8,5,1,yes\nb,PASS,13,5,1,yes\nc,FAIL,,,,\n')
+        failed = self.csv('failed.csv', 'a,FAIL,,,,\nb,FAIL,,,,\nc,FAIL,,,,\n')
+        result = m.compare([('first', old, new), ('second', old, failed)])['summary']['paired_area_by_stage']
+        self.assertEqual(result['first']['total_area_delta'], -9)
+        self.assertEqual(result['first']['median_area_delta'], -4.5)
+        self.assertEqual(result['first']['largest_saving_cases'], ['a'])
+        self.assertEqual(result['first']['total_excluding_one_largest_saving'], 3)
+        self.assertIsNone(result['second']['total_area_delta'])
+
 if __name__=='__main__':unittest.main()

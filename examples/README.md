@@ -50,3 +50,7 @@ Try these explanations together before the live Q&A:
 
 The complete reproducible Stage 1 experiment is documented in
 `../docs/PROGRESS_20261110.md`. Use its actual measurements for the report.
+
+## From the worked example to the Stage 2 prototype
+
+Run `make stage2`, then use `./build/synth_stage2 examples/shared_outputs.txt /tmp/ufug2106-stage2-demo.txt` and `python3 tools/check_circuit.py examples/shared_outputs.txt /tmp/ufug2106-stage2-demo.txt`. The independent check covers all eight input rows and both outputs. Here both stages can reach area 10 and delay 5, so this example checks the interface and correctness. To evaluate optimization, compare the same 25 Stage 1 cases: the prototype uses less area on eight, equal area on nine, and more area on eight. Inspect [the paired case results](../results/stage2-mapped-final-vs-stage1-20261113.json) before interpreting the 1.03% aggregate saving.

@@ -1,0 +1,164 @@
+{
+  "checked_at_beijing": "2026-11-13T17:31:23.426140+08:00",
+  "sync_manifest_generated_at": "2026-11-13T09:30:51.745205Z",
+  "course_id": 3869,
+  "course_files": [
+    {
+      "file_id": "785113",
+      "path": "official/course_materials/Chapter 01--canvas-785113.pdf",
+      "bytes": 1877466,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/785113"
+    },
+    {
+      "file_id": "793767",
+      "path": "official/course_materials/Chapter 02--canvas-793767.pdf",
+      "bytes": 4471927,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/793767"
+    },
+    {
+      "file_id": "811214",
+      "path": "official/course_materials/Chapter 03--canvas-811214.pdf",
+      "bytes": 2090515,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/811214"
+    },
+    {
+      "file_id": "829108",
+      "path": "official/course_materials/Chapter 04--canvas-829108.pdf",
+      "bytes": 3976377,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/829108"
+    },
+    {
+      "file_id": "829096",
+      "path": "official/course_materials/Chapter 05--canvas-829096.pdf",
+      "bytes": 9016018,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/829096"
+    },
+    {
+      "file_id": "863467",
+      "path": "official/course_materials/Chapter 06--canvas-863467.pdf",
+      "bytes": 5371436,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/863467"
+    },
+    {
+      "file_id": "852284",
+      "path": "official/course_materials/Chapter 07--canvas-852284.pdf",
+      "bytes": 3585913,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/852284"
+    },
+    {
+      "file_id": "863458",
+      "path": "official/course_materials/Chapter 08--canvas-863458.pdf",
+      "bytes": 6532442,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/863458"
+    },
+    {
+      "file_id": "863457",
+      "path": "official/course_materials/Chapter 09--canvas-863457.pdf",
+      "bytes": 2772164,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/863457"
+    },
+    {
+      "file_id": "874458",
+      "path": "official/course_materials/Chapter 10 (preview)--canvas-874458.pdf",
+      "bytes": 7025544,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/874458"
+    },
+    {
+      "file_id": "874463",
+      "path": "official/course_materials/Chapter 11 (preview)--canvas-874463.pdf",
+      "bytes": 2642042,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/874463"
+    },
+    {
+      "file_id": "874465",
+      "path": "official/course_materials/Chapter 12 (preview)--canvas-874465.pdf",
+      "bytes": 8948291,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/874465"
+    },
+    {
+      "file_id": "785116",
+      "path": "official/course_materials/Course Information--canvas-785116.pdf",
+      "bytes": 296107,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/785116"
+    },
+    {
+      "file_id": "790715",
+      "path": "official/course_materials/Tutorial 01--canvas-790715.pdf",
+      "bytes": 1192810,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/790715"
+    },
+    {
+      "file_id": "801444",
+      "path": "official/course_materials/Tutorial 02--canvas-801444.pdf",
+      "bytes": 1716489,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/801444"
+    },
+    {
+      "file_id": "824242",
+      "path": "official/course_materials/Tutorial 03--canvas-824242.pdf",
+      "bytes": 331249,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/824242"
+    },
+    {
+      "file_id": "826136",
+      "path": "official/course_materials/Tutorial 04--canvas-826136.pdf",
+      "bytes": 300175,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/826136"
+    },
+    {
+      "file_id": "837375",
+      "path": "official/course_materials/Tutorial 05--canvas-837375.pdf",
+      "bytes": 258475,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/837375"
+    },
+    {
+      "file_id": "847791",
+      "path": "official/course_materials/Tutorial 06--canvas-847791.pdf",
+      "bytes": 250100,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/847791"
+    },
+    {
+      "file_id": "863341",
+      "path": "official/course_materials/Tutorial 07--canvas-863341.pdf",
+      "bytes": 345321,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/863341"
+    },
+    {
+      "file_id": "869856",
+      "path": "official/course_materials/Tutorial 08--canvas-869856.pdf",
+      "bytes": 473986,
+      "source": "https://hkust-gz.instructure.com/courses/3869/files/869856"
+    }
+  ],
+  "project_records": [
+    {
+      "type": "course.announcement",
+      "id": 35267,
+      "title": "Final Project Group Formation – Deadline: November 4",
+      "due_at": null,
+      "synced_at": "2026-11-13T09:30:51.745205Z",
+      "body_html": "<p>Dear Students,</p>\n<p>&nbsp;</p>\n<p>Attached is <strong>tentative version of final project</strong>. For this project, you are required to form a group of <strong>two students</strong>. Please register your group members using the group registration form through this link, <strong>by 11:59 PM on November 4</strong>. Students who have not formed a group by the deadline will be randomly assigned to groups.</p>\n<p>[Update on November 4] If you countered the expiration of link issue, you can retry through <a class=\"inline_disabled\" title=\"Link\" href=\"https://hkustgz-my.sharepoint.com/:x:/g/personal/zlin037_connect_hkust-gz_edu_cn/IQDYnKw80mGvSqgm8s5O4eNaAY-BrP6rVGi_DyWA_P2C6dE?e=3Spi4E\" target=\"_blank\">this link</a>.</p>\n<p>&nbsp;</p>\n<p>Best regards,</p>\n<p>UFUG2106 Teaching Team</p>",
+      "source": "https://hkust-gz.instructure.com/courses/3869/discussion_topics/35267"
+    },
+    {
+      "type": "course.assignment",
+      "id": 30398,
+      "title": "Stage 1",
+      "due_at": "2026-11-19T15:59:59Z",
+      "synced_at": "2026-11-13T09:30:51.745205Z",
+      "body_html": "<p><a class=\"instructure_file_link instructure_scribd_file inline_disabled\" title=\"UFUG2106_Final_Project.pdf\" href=\"https://hkust-gz.instructure.com/courses/3869/files/869384?wrap=1\" target=\"_blank\" data-api-endpoint=\"https://hkust-gz.instructure.com/api/v1/courses/3869/files/869384\" data-api-returntype=\"File\">Final_Project.pdf</a></p>\n<p><a class=\"instructure_file_link inline_disabled\" title=\"stage1.zip\" href=\"https://hkust-gz.instructure.com/courses/3869/files/869386?wrap=1\" target=\"_blank\" data-api-endpoint=\"https://hkust-gz.instructure.com/api/v1/courses/3869/files/869386\" data-api-returntype=\"File\">stage1.zip</a></p>\n<p><a class=\"instructure_file_link inline_disabled\" title=\"evaluator\" href=\"https://hkust-gz.instructure.com/courses/3869/files/869388?wrap=1\" target=\"_blank\" data-api-endpoint=\"https://hkust-gz.instructure.com/api/v1/courses/3869/files/869388\" data-api-returntype=\"File\">evaluator</a></p>\n<p><span>Note: The provided evaluator is the Linux x86 version we will use to test your program on the designated server. We also encourage you to build your own evaluator to support algorithm development, debugging, and testing.&nbsp;<br>You need to submit <strong>a</strong> <strong>zip file of source code</strong> and <strong>a report in pdf format</strong>.</span></p>",
+      "source": "https://hkust-gz.instructure.com/courses/3869/assignments/30398"
+    },
+    {
+      "type": "course.announcement",
+      "id": 35680,
+      "title": "Final Project - Stage 1",
+      "due_at": null,
+      "synced_at": "2026-11-13T09:30:51.745205Z",
+      "body_html": "<p>Dear students,</p>\n<p>&nbsp;</p>\n<p>Based on your responses in the online sheet, 12 students have successfully formed 6 groups, and the remaining students have been randomly assigned to 8 groups. Please check <a title=\"People\" href=\"https://hkust-gz.instructure.com/courses/3869/users\" data-course-type=\"navigation\">People→Final Project Grouping</a> to confirm your group assignment and get in touch with your teammate.</p>\n<p>We are now starting Stage 1 of the final project. <span style=\"font-size: 1rem;\">Please submit your source code and Stage 1 report <a title=\"Stage 1\" href=\"https://hkust-gz.instructure.com/courses/3869/assignments/30398\" data-course-type=\"assignments\" data-published=\"false\" data-api-endpoint=\"https://hkust-gz.instructure.com/api/v1/courses/3869/assignments/30398\" data-api-returntype=\"Assignment\">here</a> by 11:59 PM on November 19.</span></p>\n<p>If you have any questions or encounter any problems, please feel free to contact us (<a href=\"mailto:zlin037@connect.hkust-gz.edu.cn\" target=\"_blank\">zlin037@connect.hkust-gz.edu.cn</a> and <a href=\"mailto:ywang056@connect.hkust-gz.edu.cn\" target=\"_blank\">ywang056@connect.hkust-gz.edu.cn</a>).<br><br></p>\n<p>Best regards,</p>\n<p>UFUG2106 Teaching Team</p>",
+      "source": "https://hkust-gz.instructure.com/courses/3869/discussion_topics/35680"
+    }
+  ],
+  "stage2_found_in_visible_records": false,
+  "existing_project_attachments": "Prior Stage 1 files retained at official/; current assignment still links file IDs 869384, 869386, 869388. Not re-downloaded by the visible-file sync."
+}

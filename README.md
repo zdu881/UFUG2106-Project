@@ -1,13 +1,36 @@
 # UFUG2106 — Truth Table to Circuit
 
+## Stage 2 public comparison
+
+Build the integrated solver with `make stage2`, then run `./build/synth_stage2 INPUT OUTPUT`.
+The solver compares complete circuits and individual output cones, accounting for
+shared gates. A row/column decoder offers a shallower circuit when the BDD search
+misses the delay target. The extracted submission source passed all 50 public
+cases and delay targets. Total area was 886,004 and synthesis time was 32.99 s,
+compared with 1,001,957 and 43.16 s for the previous packed solver. Median circuit
+delay increased from 41.5 to 50.5. On 30 fresh generated functions, both passed
+every truth table and the new solver met 30 delay targets versus 26.
+
+Run `make stage2-source` to create `artifacts/UFUG2106_Group2_Stage2_Source.zip`.
+The 64 MiB synthetic circuit passes under a hard address-space cap. The course
+evaluator still reports a memory-limit failure on that case.
+
+[Report](reports/stage2-selection-20261121/UFUG2106_Group2_Stage2_Report.pdf) ·
+[Public comparison with Stage 1](reports/stage2-selection-20261121/comparison.json) ·
+[Changes from the previous solver](reports/stage2-selection-20261121/vs-packed.json) ·
+[Held-out and ablation results](reports/stage2-selection-20261121/control-comparison.json) ·
+[Holdout generator](reports/stage2-selection-20261121/generate_holdout.py) ·
+[Memory and case 024](reports/stage2-selection-20261121/resource-study.json) ·
+[Round 5.1 attribution](src/round51/ORIGIN.md)
+
 Workspace: `~/2106Proj`. Coding-agent entry: [AGENTS.md](AGENTS.md);
 [OpenCode handoff](docs/WORKSPACE_HANDOFF.md).
 
 A single-threaded C++17 truth-table synthesizer, baseline, independent verifier, and reproducible experiments for the published Stage 1 cases.
 
-**Provenance:** this workspace was developed with AI assistance. AI use has been confirmed for this project. The code and measurements are recorded transparently; students remain responsible for understanding and presenting the work. See `docs/AI_WORK_LOG.md` and `docs/REQUIREMENTS_AND_REVIEW.md`.
+Group 2 — Zeyun DU (50025854) and Jincan Li (50032637). See the [teamwork log](docs/TEAMWORK_LOG.md) and [AI assistance record](docs/AI_WORK_LOG.md).
 
-Project team (collaborator updated by Zeyun DU): GROUP 2 — Zeyun DU and Jincan Li. This does not attribute any unconfirmed contribution to either student.
+Stage 1 was resubmitted on 17 November (attempt 2). The [submission record](docs/STAGE1_DELIVERY_20261115.md) links the uploaded source and seven-page report.
 
 ## Build and execute
 
@@ -25,13 +48,14 @@ The program reads the entire official input format, including optional limits. I
 
 ## Official evaluation
 
-The instructor-provided Linux evaluator and 25 case files are included in this private repository under `official/`. They are not bundled in the source-only archive; use your course copies when reproducing it.
+The instructor-provided Linux evaluator and both banks of 25 cases are included in this private repository under `official/`. They are not bundled in the source-only archive; use your course copies when reproducing it.
 
 ```bash
-mkdir -p results/reproduction
+mkdir -p results
+run_dir=$(mktemp -d results/reproduction-XXXXXX)
 ./official/evaluator ./build/synth ./official/stage1 \
-  --report results/reproduction/optimized.csv \
-  --save-outputs results/reproduction/outputs
+  --report "$run_dir/optimized.csv" \
+  --save-outputs "$run_dir/outputs"
 ```
 
 The output directory must be new or empty. The evaluator writes **CSV**, even if given a filename ending in `.json`. Read `target_met` separately from `status`: a correct but late circuit can be PASS while missing the delay target.
@@ -41,26 +65,26 @@ The output directory must be new or empty. The evaluator writes **CSV**, even if
 The synthesizer itself needs only C++. Additional Python checks require Python 3.10+ and NumPy. Report generation additionally uses Markdown, WeasyPrint, pypdf and Liberation Sans fonts.
 
 ```bash
-python3 tools/check_circuit.py input.txt output.txt
-python3 tests/regression.py ./build/synth results/regression.json
-python3 tools/verify_all.py official/stage1 results/reproduction/outputs \
-  results/reproduction/optimized.csv results/reproduction/independent.json
+./build/synth examples/shared_outputs.txt "$run_dir/example.txt"
+python3 tools/check_circuit.py examples/shared_outputs.txt "$run_dir/example.txt"
+python3 tests/regression.py ./build/synth "$run_dir/regression.json"
+python3 tools/verify_all.py official/stage1 "$run_dir/outputs" \
+  "$run_dir/optimized.csv" "$run_dir/independent.json"
 ```
 
 The independent checker evaluates **every input assignment and every output**, validates IDs/arity/topological ordering, and independently recomputes area and delay. It uses Python integer bit lanes, not the BDD implementation or the official evaluator's internals.
 
 ## Results and tradeoffs
 
-`results/final/` retains the original technical evaluation; `results/stage1-final-20261110/` is the latest fresh snapshot (25/25 PASS, 25/25 targets, area sum 622,816, median runtime 603.945 ms). `results/reproduction-20261110-verified/` is an earlier verified rerun. Earlier `optimized_v*.csv` and source snapshots document iterations, not different claims about the final version. CPU time and deadline-truncated search can vary across machines, so identical final circuit bytes are not guaranteed. Always report the actual measured outputs of a rerun.
+`results/final/` retains the original technical evaluation; `results/stage1-final-20261110/` is the snapshot used for the report’s performance table (25/25 PASS, 25/25 targets, area sum 622,816, median runtime 603.945 ms). `results/reproduction-20261110-verified/` is an earlier verified rerun. Earlier `optimized_v*.csv` and source snapshots document iterations, not different claims about the final version. CPU time and deadline-truncated search can vary across machines, so identical final circuit bytes are not guaranteed. Always report the actual measured outputs of a rerun.
 
 The selection criterion is delay-excess first, then area, then delay; runtime is constrained through the search budget. The teacher has not published a numerical score formula. This heuristic is not a claim of optimality or of an official grade. The report must show the additional synthesis runtime alongside area improvements.
 
 ## Remaining project gates
 
-- Students must understand, accurately describe, and own the work they actually do. Keep genuine teamwork records.
-- Stage 2 adds another 25 public cases; compare the actual adopted Stage 1 method with the Stage 2 improvement on all 50 when released.
-- Stage 2 deadline and live Q&A are still TBD. Both students must attend the Q&A.
-- Hidden-case grading cannot be claimed from local tests. Nothing in this workspace has been uploaded to Canvas.
+- Stage 2 released 25 further cases on Canvas; both the submitted Stage 1 method and the Stage 2 candidate must be compared across all 50 public cases.
+- Stage 2 is due on 4 December at 23:59 Beijing time. The date of the joint live Q&A is pending.
+- The reported scores cover the public cases. Hidden-case grading is pending.
 
 ## Review experiments
 
@@ -89,7 +113,7 @@ python3 tools/build_report.py --run results/stage1-final-20261110 \
 
 ## Correct Stage 2 comparison
 
-`releases/stage1_candidate/` freezes the current optimized method. It is a technical candidate, not a claim that it was submitted. Before Stage 2, retain the source snapshot of the method actually adopted for Stage 1. The simpler `src/baseline.cpp` is an engineering ablation and must not replace that Stage 1 comparator.
+`releases/stage1_candidate/` freezes the current optimized method. The delivery check matched this source to the Stage 1 package. Use it as the comparator in Stage 2. The simpler `src/baseline.cpp` is an engineering ablation and must not replace that Stage 1 comparator.
 
 After evaluating both methods separately on each published stage, compare the four CSVs:
 
@@ -102,14 +126,13 @@ python3 tools/compare_stage_results.py \
 
 The tool rejects unmatched/duplicated case sets and invalid metrics, preserves failures, and namespaces case IDs by stage. It reports area/delay/runtime differences only where both methods pass. It cannot certify CSV provenance or that an unreleased stage is complete. Retain the evaluated executable, evaluator logs and official case manifests alongside it.
 
-## Stage 2 prototype
+## Earlier Stage 2 prototype
 
-`src/synth_stage2.cpp` is an experimental order-screening method for the later
-Stage 2 comparison. On the 25 Stage 1 cases it also passes 25/25 and meets 25/25
-delay targets, with area sum 617,943 versus 622,816 and median runtime 462.188 ms
-versus 603.945 ms. Per-case tradeoffs are retained in
-`results/stage2-comparison-20261110.json`; see `docs/STAGE2_PROGRESS_20261110.md`.
-This is not a Stage 2 submission because the additional cases are not released.
+`src/synth_stage2.cpp` maps natural and influence orders before screening further
+orders, then refines candidates using actual mapped area/delay. Build with
+`make stage2`. The [50-case results](docs/STAGE2_SEARCH_20261120.md) retain
+per-case regressions as well as gains. Optional search responds to current RSS;
+the official 64 MiB stress test still fails. The [memory experiment](docs/STAGE2_SEARCH_20261120.md#64-mib-stress-result) reproduces the effect of the parent process on the measured peak.
 
 ```bash
 python3 tools/evaluate_release.py --source src/synth_stage2.cpp \
@@ -148,8 +171,7 @@ reports, selected measurement summaries, and the instructor-provided project
 materials in `official/`. Raw run snapshots remain local.
 
 After cloning on Linux x86, run `make` and the snapshot reproduction command
-above. The Stage 1 archive, its 25 extracted cases, and the executable evaluator
-are included. See `official/README.md` for original Canvas sources. Python verification needs
+above. Both public case banks and the executable evaluator are included. See `official/README.md` for original Canvas sources. Python verification needs
 NumPy; the C++ executable itself has no Python dependency. Original raw run paths
 in retained manifests refer to the development workstation; create a fresh run
 on your own machine for new provenance and outputs.

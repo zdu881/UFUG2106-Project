@@ -25,10 +25,10 @@ The search deadline uses 60% of the case runtime limit, capped at 1500 ms, reser
 
 ## Area and delay
 
-Area counts each emitted gate once, including a NOT gate if constant 1 is needed. No charge is assigned to inputs, constant 0 or wires. Gate arrival = max(fanin arrival) + gate delay. Circuit delay = max(output arrival). A shared gate is charged once even if it feeds several outputs. Optimization comparisons use the pruned output circuit, not the number of speculative search gates.
+Area counts each emitted gate once, including a NOT gate if constant 1 is needed. No charge is assigned to inputs, constant 0 or wires. Gate arrival = max(fanin arrival) + gate delay. Circuit delay = max(output arrival). Compute both metrics on gates reachable from the final outputs.
 
 ## Complexity and limits
 
 A fixed-order construction visits O(m*2^n) table positions. BDD sharing often reduces representation size but its worst case remains exponential. The input itself already has m*2^n bits. Variable ordering, mapping and sharing are heuristic; global area/delay optimality is not claimed. Time-limited search can complete different numbers of candidates on different machines even with a fixed seed.
 
-Stage 2 data and hidden cases are not currently available. Generated tests provide additional evidence but do not replace those evaluations.
+The Stage 2 prototype has a separate [paired comparison and memory-limit experiment](STAGE2_MAPPED_SEARCH_20261113.md). Its 25-case comparison uses the Stage 1 public set.

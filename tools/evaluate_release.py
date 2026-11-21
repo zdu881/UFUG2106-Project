@@ -46,6 +46,8 @@ def main():
     (out / 'cases').mkdir()
     (out / 'verifier').mkdir()
     shutil.copy2(source, out / 'synth.cpp')
+    if '#include "round51/synthesis.hpp"' in source.read_text():
+        shutil.copytree(source.parent / 'round51', out / 'round51')
     shutil.copy2(evaluator, out / 'evaluator')
     for case in cases:
         shutil.copy2(case, out / 'cases' / case.name)

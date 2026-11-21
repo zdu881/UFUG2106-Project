@@ -1,5 +1,9 @@
 # Stage 2 prototype — order screening, 10 November 2026
 
+Historical measurements below describe the original prototype. See
+[13 November progress](PROGRESS_20261113.md) for the current source change,
+fresh comparisons and its runtime/area tradeoff.
+
 ## Status
 
 Stage 2 cases have not been released. This is an engineering prototype against the
