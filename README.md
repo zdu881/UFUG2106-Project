@@ -58,7 +58,7 @@ The program reads the entire official input format, including optional limits. I
 
 ## Official evaluation
 
-The instructor-provided Linux evaluator and both banks of 25 cases are included in this private repository under `official/`. They are not bundled in the source-only archive; use your course copies when reproducing it.
+The instructor-provided Linux evaluator and both banks of 25 cases are available under `official/`. They are not bundled in the source-only archive; use your course copies when reproducing it.
 
 ```bash
 mkdir -p results
@@ -92,7 +92,7 @@ The selection criterion is delay-excess first, then area, then delay; runtime is
 
 ## Remaining project gates
 
-- Stage 2 released 25 further cases on Canvas; both the submitted Stage 1 method and the Stage 2 candidate must be compared across all 50 public cases.
+- The [Stage 2 report](reports/stage2-schedule-20261121/UFUG2106_Group2_Stage2_Report.pdf) compares the submitted Stage 1 method with the Stage 2 candidate on all 50 released inputs.
 - Stage 2 is due on 4 December at 23:59 Beijing time. The date of the joint live Q&A is pending.
 - The reported scores cover the public cases. Hidden-case grading is pending.
 
@@ -121,20 +121,29 @@ python3 tools/build_report.py --run results/stage1-final-20261110 \
   --output reports/UFUG2106_Stage1_Technical_Report.pdf
 ```
 
-## Correct Stage 2 comparison
+## Reproduce the Stage 2 comparison
 
-`releases/stage1_candidate/` freezes the current optimized method. The delivery check matched this source to the Stage 1 package. Use it as the comparator in Stage 2. The simpler `src/baseline.cpp` is an engineering ablation and must not replace that Stage 1 comparator.
-
-After evaluating both methods separately on each published stage, compare the four CSVs:
+Run from the repository root on Linux with a C++17 compiler and Python 3 with
+NumPy. The frozen comparator is the source submitted for Stage 1.
 
 ```bash
+run_dir=$(mktemp -d)
+for bank in stage1 stage2; do
+  cases="official/$bank"
+  python3 tools/evaluate_release.py --source releases/stage1_candidate/synth.cpp \
+    --cases "$cases" --output "$run_dir/$bank-frozen" || exit 1
+  python3 tools/evaluate_release.py --source src/synth_stage2.cpp \
+    --cases "$cases" --output "$run_dir/$bank-current" || exit 1
+done
 python3 tools/compare_stage_results.py \
-  --pair stage1 stage1_method_on_stage1.csv stage2_method_on_stage1.csv \
-  --pair stage2 stage1_method_on_stage2.csv stage2_method_on_stage2.csv \
-  --output results/stage2_comparison.json
+  --pair stage1 "$run_dir/stage1-frozen/official.csv" "$run_dir/stage1-current/official.csv" \
+  --pair stage2 "$run_dir/stage2-frozen/official.csv" "$run_dir/stage2-current/official.csv" \
+  --output "$run_dir/comparison.json"
 ```
 
-The tool rejects unmatched/duplicated case sets and invalid metrics, preserves failures, and namespaces case IDs by stage. It reports area/delay/runtime differences only where both methods pass. It cannot certify CSV provenance or that an unreleased stage is complete. Retain the evaluated executable, evaluator logs and official case manifests alongside it.
+Each run records the evaluator CSV and an independent full truth-table replay.
+The comparison pairs identical case names within each bank. Wall-clock search
+can produce different circuits across reruns.
 
 ## Earlier Stage 2 prototype
 
@@ -176,7 +185,7 @@ progress and actual rerun measurements in `docs/PROGRESS_20261110.md`.
 
 ## GitHub checkout
 
-This private repository contains project-authored source, documentation, tests,
+The full collaboration checkout contains project-authored source, documentation, tests,
 reports, selected measurement summaries, and the instructor-provided project
 materials in `official/`. Raw run snapshots remain local.
 
