@@ -1,0 +1,22 @@
+{
+  "Submitted Stage 1": {
+    "targets": 50,
+    "area": 1206033,
+    "total_ms": 39886.594
+  },
+  "Round 5.1": {
+    "targets": 50,
+    "area": 1038445,
+    "total_ms": 15903.298
+  },
+  "Previous selection": {
+    "targets": 50,
+    "area": 886004,
+    "total_ms": 32993.773
+  },
+  "Revised schedule": {
+    "targets": 50,
+    "area": 872632,
+    "total_ms": 32869.723
+  }
+}

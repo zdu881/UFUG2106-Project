@@ -1028,8 +1028,9 @@ int main(int argc, char **argv) {
             if (sampled_order != descending && sampled_order != order)
                 try_map_order(sampled_order, deadline, {1.0}, true);
         }
+        // Compare orders at one weight before refining their area/delay tradeoffs.
         if (Clock::now() < deadline)
-            try_map_order(order, deadline, {16.0, 4.0, 1.0, 0.0});
+            try_map_order(order, deadline, {4.0});
 
         // Stage 2 order screening: generate a wider pool, rank by BDD node count,
         // and spend the remaining budget mapping only the most promising orders.
@@ -1122,7 +1123,6 @@ int main(int argc, char **argv) {
                          [](const auto &a, const auto &b) { return a.first < b.first; });
         for (const auto &entry : refinement) {
             if (Clock::now() >= deadline || !search_memory.available()) break;
-            if (entry.second == order) continue; // already tried all weights
             if (!try_map_order(entry.second, deadline, {1.0, 0.0, 16.0}))
                 break;
         }

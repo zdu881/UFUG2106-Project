@@ -3,24 +3,34 @@
 ## Stage 2 public comparison
 
 Build the integrated solver with `make stage2`, then run `./build/synth_stage2 INPUT OUTPUT`.
-The solver compares complete circuits and individual output cones, accounting for
-shared gates. A row/column decoder offers a shallower circuit when the BDD search
-misses the delay target. The extracted submission source passed all 50 public
-cases and delay targets. Total area was 886,004 and synthesis time was 32.99 s,
-compared with 1,001,957 and 43.16 s for the previous packed solver. Median circuit
-delay increased from 41.5 to 50.5. On 30 fresh generated functions, both passed
-every truth table and the new solver met 30 delay targets versus 26.
+The solver compares variable orders before refining their area/delay weights. It
+can select the implementation of each output independently while accounting for
+shared gates. Both the course evaluator and the independent checker passed all
+50 public cases from the unpacked ZIP. All delay targets were met, with
+872,632 total area and 32.87 s of synthesis time on this workstation.
+The previous output-selection solver used 886,004 area and 32.99 s.
+Across three paired runs of Stage 2 case 011, area fell from 52,463 to 39,886 and
+delay rose from 62 to 78 (target 79). Both solvers met all 30 targets on a fresh
+generated set and used the same aggregate area.
 
 Run `make stage2-source` to create `artifacts/UFUG2106_Group2_Stage2_Source.zip`.
-The 64 MiB synthetic circuit passes under a hard address-space cap. The course
-evaluator still reports a memory-limit failure on that case.
+Rebuild the four-page report from the retained official CSVs and independent
+replays with Python and ReportLab:
 
-[Report](reports/stage2-selection-20261121/UFUG2106_Group2_Stage2_Report.pdf) ·
-[Public comparison with Stage 1](reports/stage2-selection-20261121/comparison.json) ·
-[Changes from the previous solver](reports/stage2-selection-20261121/vs-packed.json) ·
-[Held-out and ablation results](reports/stage2-selection-20261121/control-comparison.json) ·
-[Holdout generator](reports/stage2-selection-20261121/generate_holdout.py) ·
-[Memory and case 024](reports/stage2-selection-20261121/resource-study.json) ·
+```sh
+python3 tools/report_public_comparison.py reports/stage2-schedule-20261121 /tmp/ufug2106-report.pdf --merged
+```
+
+The 64 MiB stress case passes with a hard address-space limit. The course evaluator
+still reports MEMORY_LIMIT on this synthetic input.
+
+[Report](reports/stage2-schedule-20261121/UFUG2106_Group2_Stage2_Report.pdf) ·
+[Comparison with Stage 1](reports/stage2-schedule-20261121/comparison.json) ·
+[Comparison with prior schedule](reports/stage2-schedule-20261121/vs-previous.json) ·
+[Held-out, scheduling and ablation tests](reports/stage2-schedule-20261121/control-comparison.json) ·
+[Holdout generator](reports/stage2-schedule-20261121/generate_holdout.py) ·
+[Memory](reports/stage2-schedule-20261121/resource-study.json) ·
+[Previous output-selection study](reports/stage2-selection-20261121/UFUG2106_Group2_Stage2_Report.pdf) ·
 [Round 5.1 attribution](src/round51/ORIGIN.md)
 
 Workspace: `~/2106Proj`. Coding-agent entry: [AGENTS.md](AGENTS.md);

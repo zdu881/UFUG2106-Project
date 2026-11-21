@@ -35,3 +35,14 @@ Use the handout circuit `y0 = x0 OR x1`, `y1 = y0 AND x2`. When the OR costs 8 a
   Output selection saved 26,480 area units in the eight-case ablation. The final
   30 generated tests were held back from tuning. Official hidden scores and
   class rankings remain unknown.
+
+## 21 November — variable-order scheduling
+
+Why did the 011 regression happen? Under the 1.8 s cap the old schedule spent
+early time trying four timing weights on the natural variable order. The new one
+tries a single weight and measures other orders sooner. Three paired runs gave
+52,463 → 39,886 area and 62 → 78 delay (target 79). Across the entire public bank
+the area saving was 13,372. Excluding that case the total area
+fell by 795 units. The median circuit delay was 51.5.
+On 30 fresh generated functions both schedules met every target and used
+the same aggregate area. [Measurements](../reports/stage2-schedule-20261121/control-comparison.json).

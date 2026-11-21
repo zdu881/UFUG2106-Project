@@ -1,0 +1,1342 @@
+{
+  "scope": "CSV comparison; actual release coverage and executable provenance must be verified separately",
+  "stages": [
+    "stage1",
+    "stage2"
+  ],
+  "summary": {
+    "case_count": 50,
+    "both_pass_count": 50,
+    "stage1_method_pass": 50,
+    "improved_method_pass": 50,
+    "regressed_validity": 0,
+    "recovered_validity": 0,
+    "stage1_method_target_met": 50,
+    "improved_method_target_met": 50,
+    "area_lower_on_both_pass": 9,
+    "area_equal_on_both_pass": 40,
+    "area_higher_on_both_pass": 1,
+    "paired_area_by_stage": {
+      "stage1": {
+        "both_pass_count": 25,
+        "total_area_delta": -415,
+        "median_area_delta": 0,
+        "largest_saving_cases": [
+          "case_001.txt"
+        ],
+        "total_excluding_one_largest_saving": 77
+      },
+      "stage2": {
+        "both_pass_count": 25,
+        "total_area_delta": -12957,
+        "median_area_delta": 0,
+        "largest_saving_cases": [
+          "case_011.txt"
+        ],
+        "total_excluding_one_largest_saving": -380
+      }
+    }
+  },
+  "cases": [
+    {
+      "stage": "stage1",
+      "case": "case_001.txt",
+      "stage1_method": {
+        "case": "case_001.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 56330,
+        "delay": 70,
+        "runtime_ms": 1745.781,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_001.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 55838,
+        "delay": 76,
+        "runtime_ms": 1721.018,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": -492,
+      "delay_delta": 6,
+      "runtime_delta_ms": -24.76299999999992
+    },
+    {
+      "stage": "stage1",
+      "case": "case_002.txt",
+      "stage1_method": {
+        "case": "case_002.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 14445,
+        "delay": 61,
+        "runtime_ms": 1156.338,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_002.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 14445,
+        "delay": 61,
+        "runtime_ms": 1156.708,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 0.37000000000011823
+    },
+    {
+      "stage": "stage1",
+      "case": "case_003.txt",
+      "stage1_method": {
+        "case": "case_003.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 16932,
+        "delay": 55,
+        "runtime_ms": 1222.184,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_003.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 16932,
+        "delay": 55,
+        "runtime_ms": 1230.816,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 8.632000000000062
+    },
+    {
+      "stage": "stage1",
+      "case": "case_004.txt",
+      "stage1_method": {
+        "case": "case_004.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 3211,
+        "delay": 55,
+        "runtime_ms": 204.308,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_004.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 3211,
+        "delay": 55,
+        "runtime_ms": 202.369,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -1.938999999999993
+    },
+    {
+      "stage": "stage1",
+      "case": "case_005.txt",
+      "stage1_method": {
+        "case": "case_005.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 590,
+        "delay": 34,
+        "runtime_ms": 45.373,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_005.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 590,
+        "delay": 34,
+        "runtime_ms": 44.659,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -0.7139999999999986
+    },
+    {
+      "stage": "stage1",
+      "case": "case_006.txt",
+      "stage1_method": {
+        "case": "case_006.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 5262,
+        "delay": 60,
+        "runtime_ms": 257.966,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_006.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 5262,
+        "delay": 60,
+        "runtime_ms": 263.261,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 5.295000000000016
+    },
+    {
+      "stage": "stage1",
+      "case": "case_007.txt",
+      "stage1_method": {
+        "case": "case_007.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 78042,
+        "delay": 71,
+        "runtime_ms": 1812.595,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_007.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 78042,
+        "delay": 71,
+        "runtime_ms": 1811.571,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -1.0240000000001146
+    },
+    {
+      "stage": "stage1",
+      "case": "case_008.txt",
+      "stage1_method": {
+        "case": "case_008.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 6544,
+        "delay": 61,
+        "runtime_ms": 323.001,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_008.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 6544,
+        "delay": 61,
+        "runtime_ms": 321.714,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -1.2869999999999777
+    },
+    {
+      "stage": "stage1",
+      "case": "case_009.txt",
+      "stage1_method": {
+        "case": "case_009.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 14584,
+        "delay": 46,
+        "runtime_ms": 408.058,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_009.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 14584,
+        "delay": 46,
+        "runtime_ms": 407.651,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -0.40699999999998226
+    },
+    {
+      "stage": "stage1",
+      "case": "case_010.txt",
+      "stage1_method": {
+        "case": "case_010.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 2525,
+        "delay": 57,
+        "runtime_ms": 333.671,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_010.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 2525,
+        "delay": 57,
+        "runtime_ms": 329.393,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -4.27800000000002
+    },
+    {
+      "stage": "stage1",
+      "case": "case_011.txt",
+      "stage1_method": {
+        "case": "case_011.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 436,
+        "delay": 33,
+        "runtime_ms": 46.346,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_011.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 436,
+        "delay": 33,
+        "runtime_ms": 45.663,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -0.6829999999999998
+    },
+    {
+      "stage": "stage1",
+      "case": "case_012.txt",
+      "stage1_method": {
+        "case": "case_012.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 4414,
+        "delay": 40,
+        "runtime_ms": 166.148,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_012.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 4414,
+        "delay": 40,
+        "runtime_ms": 168.079,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 1.9310000000000116
+    },
+    {
+      "stage": "stage1",
+      "case": "case_013.txt",
+      "stage1_method": {
+        "case": "case_013.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 9252,
+        "delay": 60,
+        "runtime_ms": 716.39,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_013.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 9252,
+        "delay": 60,
+        "runtime_ms": 711.109,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -5.280999999999949
+    },
+    {
+      "stage": "stage1",
+      "case": "case_014.txt",
+      "stage1_method": {
+        "case": "case_014.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 11132,
+        "delay": 61,
+        "runtime_ms": 1135.237,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_014.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 11132,
+        "delay": 61,
+        "runtime_ms": 1140.207,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 4.970000000000027
+    },
+    {
+      "stage": "stage1",
+      "case": "case_015.txt",
+      "stage1_method": {
+        "case": "case_015.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 31565,
+        "delay": 63,
+        "runtime_ms": 1458.412,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_015.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 31565,
+        "delay": 63,
+        "runtime_ms": 1443.023,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -15.389000000000124
+    },
+    {
+      "stage": "stage1",
+      "case": "case_016.txt",
+      "stage1_method": {
+        "case": "case_016.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 2149,
+        "delay": 40,
+        "runtime_ms": 100.431,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_016.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 2149,
+        "delay": 40,
+        "runtime_ms": 101.566,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 1.1350000000000051
+    },
+    {
+      "stage": "stage1",
+      "case": "case_017.txt",
+      "stage1_method": {
+        "case": "case_017.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 330,
+        "delay": 25,
+        "runtime_ms": 47.703,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_017.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 330,
+        "delay": 25,
+        "runtime_ms": 47.795,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 0.09199999999999875
+    },
+    {
+      "stage": "stage1",
+      "case": "case_018.txt",
+      "stage1_method": {
+        "case": "case_018.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 1167,
+        "delay": 32,
+        "runtime_ms": 47.693,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_018.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 1164,
+        "delay": 32,
+        "runtime_ms": 46.591,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": -3,
+      "delay_delta": 0,
+      "runtime_delta_ms": -1.1019999999999968
+    },
+    {
+      "stage": "stage1",
+      "case": "case_019.txt",
+      "stage1_method": {
+        "case": "case_019.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 4408,
+        "delay": 71,
+        "runtime_ms": 438.771,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_019.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 4408,
+        "delay": 71,
+        "runtime_ms": 438.11,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -0.6610000000000014
+    },
+    {
+      "stage": "stage1",
+      "case": "case_020.txt",
+      "stage1_method": {
+        "case": "case_020.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 632,
+        "delay": 35,
+        "runtime_ms": 47.669,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_020.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 632,
+        "delay": 35,
+        "runtime_ms": 46.606,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -1.0629999999999953
+    },
+    {
+      "stage": "stage1",
+      "case": "case_021.txt",
+      "stage1_method": {
+        "case": "case_021.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 27028,
+        "delay": 61,
+        "runtime_ms": 1515.39,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_021.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 27028,
+        "delay": 61,
+        "runtime_ms": 1499.587,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -15.803000000000111
+    },
+    {
+      "stage": "stage1",
+      "case": "case_022.txt",
+      "stage1_method": {
+        "case": "case_022.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 1216,
+        "delay": 31,
+        "runtime_ms": 46.897,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_022.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 1296,
+        "delay": 31,
+        "runtime_ms": 47.727,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 80,
+      "delay_delta": 0,
+      "runtime_delta_ms": 0.8299999999999983
+    },
+    {
+      "stage": "stage1",
+      "case": "case_023.txt",
+      "stage1_method": {
+        "case": "case_023.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 205,
+        "delay": 15,
+        "runtime_ms": 11.062,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_023.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 205,
+        "delay": 15,
+        "runtime_ms": 11.059,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -0.0030000000000001137
+    },
+    {
+      "stage": "stage1",
+      "case": "case_024.txt",
+      "stage1_method": {
+        "case": "case_024.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 124467,
+        "delay": 72,
+        "runtime_ms": 1814.659,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_024.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 124467,
+        "delay": 72,
+        "runtime_ms": 1824.619,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 9.959999999999809
+    },
+    {
+      "stage": "stage1",
+      "case": "case_025.txt",
+      "stage1_method": {
+        "case": "case_025.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 80679,
+        "delay": 60,
+        "runtime_ms": 1810.04,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_025.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 80679,
+        "delay": 60,
+        "runtime_ms": 1815.173,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 5.133000000000038
+    },
+    {
+      "stage": "stage2",
+      "case": "case_001.txt",
+      "stage1_method": {
+        "case": "case_001.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 1824,
+        "delay": 39,
+        "runtime_ms": 458.705,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_001.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 1824,
+        "delay": 39,
+        "runtime_ms": 460.796,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 2.091000000000008
+    },
+    {
+      "stage": "stage2",
+      "case": "case_002.txt",
+      "stage1_method": {
+        "case": "case_002.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 50225,
+        "delay": 85,
+        "runtime_ms": 1811.763,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_002.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 50225,
+        "delay": 85,
+        "runtime_ms": 1810.852,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -0.9109999999998308
+    },
+    {
+      "stage": "stage2",
+      "case": "case_003.txt",
+      "stage1_method": {
+        "case": "case_003.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 13040,
+        "delay": 60,
+        "runtime_ms": 1185.64,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_003.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 13040,
+        "delay": 60,
+        "runtime_ms": 1167.71,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -17.930000000000064
+    },
+    {
+      "stage": "stage2",
+      "case": "case_004.txt",
+      "stage1_method": {
+        "case": "case_004.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 685,
+        "delay": 31,
+        "runtime_ms": 485.356,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_004.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 685,
+        "delay": 31,
+        "runtime_ms": 487.686,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 2.329999999999984
+    },
+    {
+      "stage": "stage2",
+      "case": "case_005.txt",
+      "stage1_method": {
+        "case": "case_005.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 50884,
+        "delay": 69,
+        "runtime_ms": 1809.552,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_005.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 50884,
+        "delay": 69,
+        "runtime_ms": 1824.935,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 15.383000000000038
+    },
+    {
+      "stage": "stage2",
+      "case": "case_006.txt",
+      "stage1_method": {
+        "case": "case_006.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 8546,
+        "delay": 48,
+        "runtime_ms": 335.464,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_006.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 8232,
+        "delay": 50,
+        "runtime_ms": 329.848,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": -314,
+      "delay_delta": 2,
+      "runtime_delta_ms": -5.6159999999999854
+    },
+    {
+      "stage": "stage2",
+      "case": "case_007.txt",
+      "stage1_method": {
+        "case": "case_007.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 999,
+        "delay": 47,
+        "runtime_ms": 46.884,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_007.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 995,
+        "delay": 48,
+        "runtime_ms": 47.613,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": -4,
+      "delay_delta": 1,
+      "runtime_delta_ms": 0.7289999999999992
+    },
+    {
+      "stage": "stage2",
+      "case": "case_008.txt",
+      "stage1_method": {
+        "case": "case_008.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 871,
+        "delay": 36,
+        "runtime_ms": 47.778,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_008.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 871,
+        "delay": 36,
+        "runtime_ms": 47.4,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -0.3780000000000001
+    },
+    {
+      "stage": "stage2",
+      "case": "case_009.txt",
+      "stage1_method": {
+        "case": "case_009.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 1169,
+        "delay": 25,
+        "runtime_ms": 47.824,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_009.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 1158,
+        "delay": 31,
+        "runtime_ms": 47.561,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": -11,
+      "delay_delta": 6,
+      "runtime_delta_ms": -0.2629999999999981
+    },
+    {
+      "stage": "stage2",
+      "case": "case_010.txt",
+      "stage1_method": {
+        "case": "case_010.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 214,
+        "delay": 21,
+        "runtime_ms": 35.831,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_010.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 214,
+        "delay": 21,
+        "runtime_ms": 34.868,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -0.963000000000001
+    },
+    {
+      "stage": "stage2",
+      "case": "case_011.txt",
+      "stage1_method": {
+        "case": "case_011.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 52463,
+        "delay": 62,
+        "runtime_ms": 1811.841,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_011.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 39886,
+        "delay": 78,
+        "runtime_ms": 1808.798,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": -12577,
+      "delay_delta": 16,
+      "runtime_delta_ms": -3.0429999999998927
+    },
+    {
+      "stage": "stage2",
+      "case": "case_012.txt",
+      "stage1_method": {
+        "case": "case_012.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 3352,
+        "delay": 39,
+        "runtime_ms": 232.586,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_012.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 3352,
+        "delay": 39,
+        "runtime_ms": 224.606,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -7.980000000000018
+    },
+    {
+      "stage": "stage2",
+      "case": "case_013.txt",
+      "stage1_method": {
+        "case": "case_013.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 82388,
+        "delay": 64,
+        "runtime_ms": 1829.664,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_013.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 82368,
+        "delay": 68,
+        "runtime_ms": 1813.778,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": -20,
+      "delay_delta": 4,
+      "runtime_delta_ms": -15.885999999999967
+    },
+    {
+      "stage": "stage2",
+      "case": "case_014.txt",
+      "stage1_method": {
+        "case": "case_014.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 62600,
+        "delay": 69,
+        "runtime_ms": 1809.2,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_014.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 62600,
+        "delay": 69,
+        "runtime_ms": 1809.686,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 0.4859999999998763
+    },
+    {
+      "stage": "stage2",
+      "case": "case_015.txt",
+      "stage1_method": {
+        "case": "case_015.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 5544,
+        "delay": 53,
+        "runtime_ms": 318.725,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_015.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 5544,
+        "delay": 53,
+        "runtime_ms": 316.677,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -2.048000000000002
+    },
+    {
+      "stage": "stage2",
+      "case": "case_016.txt",
+      "stage1_method": {
+        "case": "case_016.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 1720,
+        "delay": 39,
+        "runtime_ms": 47.761,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_016.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 1696,
+        "delay": 40,
+        "runtime_ms": 48.996,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": -24,
+      "delay_delta": 1,
+      "runtime_delta_ms": 1.2349999999999994
+    },
+    {
+      "stage": "stage2",
+      "case": "case_017.txt",
+      "stage1_method": {
+        "case": "case_017.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 11128,
+        "delay": 48,
+        "runtime_ms": 402.862,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_017.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 11128,
+        "delay": 48,
+        "runtime_ms": 394.451,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -8.411000000000001
+    },
+    {
+      "stage": "stage2",
+      "case": "case_018.txt",
+      "stage1_method": {
+        "case": "case_018.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 700,
+        "delay": 40,
+        "runtime_ms": 39.359,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_018.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 700,
+        "delay": 40,
+        "runtime_ms": 38.192,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -1.1670000000000016
+    },
+    {
+      "stage": "stage2",
+      "case": "case_019.txt",
+      "stage1_method": {
+        "case": "case_019.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 602,
+        "delay": 35,
+        "runtime_ms": 45.747,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_019.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 602,
+        "delay": 35,
+        "runtime_ms": 44.656,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -1.091000000000001
+    },
+    {
+      "stage": "stage2",
+      "case": "case_020.txt",
+      "stage1_method": {
+        "case": "case_020.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 2154,
+        "delay": 42,
+        "runtime_ms": 107.283,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_020.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 2154,
+        "delay": 42,
+        "runtime_ms": 104.059,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -3.2240000000000038
+    },
+    {
+      "stage": "stage2",
+      "case": "case_021.txt",
+      "stage1_method": {
+        "case": "case_021.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 22221,
+        "delay": 69,
+        "runtime_ms": 1318.682,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_021.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 22221,
+        "delay": 69,
+        "runtime_ms": 1299.992,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -18.690000000000055
+    },
+    {
+      "stage": "stage2",
+      "case": "case_022.txt",
+      "stage1_method": {
+        "case": "case_022.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 787,
+        "delay": 28,
+        "runtime_ms": 46.919,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_022.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 787,
+        "delay": 28,
+        "runtime_ms": 46.948,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": 0.029000000000003467
+    },
+    {
+      "stage": "stage2",
+      "case": "case_023.txt",
+      "stage1_method": {
+        "case": "case_023.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 2298,
+        "delay": 40,
+        "runtime_ms": 110.74,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_023.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 2298,
+        "delay": 40,
+        "runtime_ms": 108.173,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -2.566999999999993
+    },
+    {
+      "stage": "stage2",
+      "case": "case_024.txt",
+      "stage1_method": {
+        "case": "case_024.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 6103,
+        "delay": 63,
+        "runtime_ms": 335.122,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_024.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 6103,
+        "delay": 63,
+        "runtime_ms": 333.152,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": 0,
+      "delay_delta": 0,
+      "runtime_delta_ms": -1.9700000000000273
+    },
+    {
+      "stage": "stage2",
+      "case": "case_025.txt",
+      "stage1_method": {
+        "case": "case_025.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 5942,
+        "delay": 73,
+        "runtime_ms": 1360.362,
+        "target_met": true
+      },
+      "improved_method": {
+        "case": "case_025.txt",
+        "status": "PASS",
+        "passed": true,
+        "area": 5935,
+        "delay": 73,
+        "runtime_ms": 1342.216,
+        "target_met": true
+      },
+      "both_pass": true,
+      "area_delta": -7,
+      "delay_delta": 0,
+      "runtime_delta_ms": -18.146000000000186
+    }
+  ]
+}

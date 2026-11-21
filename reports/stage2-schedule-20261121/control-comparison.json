@@ -1,0 +1,871 @@
+{
+  "holdout": [
+    {
+      "case": "holdout-case_001",
+      "old": {
+        "area": 7162,
+        "delay": 34,
+        "target": 40,
+        "target_met": true,
+        "assignments": 4096,
+        "valid": true,
+        "ms": 455.54
+      },
+      "new": {
+        "area": 7162,
+        "delay": 34,
+        "target": 40,
+        "target_met": true,
+        "assignments": 4096,
+        "valid": true,
+        "ms": 456.673
+      }
+    },
+    {
+      "case": "holdout-case_002",
+      "new": {
+        "area": 79,
+        "delay": 30,
+        "target": 44,
+        "target_met": true,
+        "assignments": 2048,
+        "valid": true,
+        "ms": 12.347
+      },
+      "old": {
+        "area": 79,
+        "delay": 30,
+        "target": 44,
+        "target_met": true,
+        "assignments": 2048,
+        "valid": true,
+        "ms": 12.447
+      }
+    },
+    {
+      "case": "holdout-case_003",
+      "old": {
+        "area": 2290,
+        "delay": 48,
+        "target": 48,
+        "target_met": true,
+        "assignments": 4096,
+        "valid": true,
+        "ms": 205.891
+      },
+      "new": {
+        "area": 2290,
+        "delay": 48,
+        "target": 48,
+        "target_met": true,
+        "assignments": 4096,
+        "valid": true,
+        "ms": 204.921
+      }
+    },
+    {
+      "case": "holdout-case_004",
+      "new": {
+        "area": 92,
+        "delay": 10,
+        "target": 52,
+        "target_met": true,
+        "assignments": 8192,
+        "valid": true,
+        "ms": 16.697
+      },
+      "old": {
+        "area": 92,
+        "delay": 10,
+        "target": 52,
+        "target_met": true,
+        "assignments": 8192,
+        "valid": true,
+        "ms": 16.841
+      }
+    },
+    {
+      "case": "holdout-case_005",
+      "old": {
+        "area": 6652,
+        "delay": 38,
+        "target": 40,
+        "target_met": true,
+        "assignments": 16384,
+        "valid": true,
+        "ms": 165.371
+      },
+      "new": {
+        "area": 6652,
+        "delay": 38,
+        "target": 40,
+        "target_met": true,
+        "assignments": 16384,
+        "valid": true,
+        "ms": 166.921
+      }
+    },
+    {
+      "case": "holdout-case_006",
+      "new": {
+        "area": 368,
+        "delay": 38,
+        "target": 44,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 28.863
+      },
+      "old": {
+        "area": 368,
+        "delay": 38,
+        "target": 44,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 28.909
+      }
+    },
+    {
+      "case": "holdout-case_007",
+      "old": {
+        "area": 18552,
+        "delay": 31,
+        "target": 42,
+        "target_met": true,
+        "assignments": 8192,
+        "valid": true,
+        "ms": 1104.68
+      },
+      "new": {
+        "area": 18552,
+        "delay": 31,
+        "target": 42,
+        "target_met": true,
+        "assignments": 8192,
+        "valid": true,
+        "ms": 1108.171
+      }
+    },
+    {
+      "case": "holdout-case_008",
+      "new": {
+        "area": 319,
+        "delay": 38,
+        "target": 52,
+        "target_met": true,
+        "assignments": 4096,
+        "valid": true,
+        "ms": 25.442
+      },
+      "old": {
+        "area": 319,
+        "delay": 38,
+        "target": 52,
+        "target_met": true,
+        "assignments": 4096,
+        "valid": true,
+        "ms": 26.507
+      }
+    },
+    {
+      "case": "holdout-case_009",
+      "old": {
+        "area": 2844,
+        "delay": 38,
+        "target": 40,
+        "target_met": true,
+        "assignments": 8192,
+        "valid": true,
+        "ms": 248.221
+      },
+      "new": {
+        "area": 2844,
+        "delay": 38,
+        "target": 40,
+        "target_met": true,
+        "assignments": 8192,
+        "valid": true,
+        "ms": 252.995
+      }
+    },
+    {
+      "case": "holdout-case_010",
+      "new": {
+        "area": 75,
+        "delay": 14,
+        "target": 44,
+        "target_met": true,
+        "assignments": 16384,
+        "valid": true,
+        "ms": 9.319
+      },
+      "old": {
+        "area": 75,
+        "delay": 14,
+        "target": 44,
+        "target_met": true,
+        "assignments": 16384,
+        "valid": true,
+        "ms": 9.281
+      }
+    },
+    {
+      "case": "holdout-case_011",
+      "old": {
+        "area": 1876,
+        "delay": 46,
+        "target": 48,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 261.449
+      },
+      "new": {
+        "area": 1876,
+        "delay": 46,
+        "target": 48,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 261.482
+      }
+    },
+    {
+      "case": "holdout-case_012",
+      "new": {
+        "area": 368,
+        "delay": 18,
+        "target": 52,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 28.688
+      },
+      "old": {
+        "area": 368,
+        "delay": 18,
+        "target": 52,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 28.334
+      }
+    },
+    {
+      "case": "holdout-case_013",
+      "old": {
+        "area": 38104,
+        "delay": 41,
+        "target": 44,
+        "target_met": true,
+        "assignments": 16384,
+        "valid": true,
+        "ms": 1439.466
+      },
+      "new": {
+        "area": 38104,
+        "delay": 41,
+        "target": 44,
+        "target_met": true,
+        "assignments": 16384,
+        "valid": true,
+        "ms": 1416.258
+      }
+    },
+    {
+      "case": "holdout-case_014",
+      "new": {
+        "area": 120,
+        "delay": 25,
+        "target": 44,
+        "target_met": true,
+        "assignments": 8192,
+        "valid": true,
+        "ms": 34.134
+      },
+      "old": {
+        "area": 120,
+        "delay": 25,
+        "target": 44,
+        "target_met": true,
+        "assignments": 8192,
+        "valid": true,
+        "ms": 34.113
+      }
+    },
+    {
+      "case": "holdout-case_015",
+      "old": {
+        "area": 844,
+        "delay": 38,
+        "target": 48,
+        "target_met": true,
+        "assignments": 16384,
+        "valid": true,
+        "ms": 308.924
+      },
+      "new": {
+        "area": 844,
+        "delay": 38,
+        "target": 48,
+        "target_met": true,
+        "assignments": 16384,
+        "valid": true,
+        "ms": 296.509
+      }
+    },
+    {
+      "case": "holdout-case_016",
+      "new": {
+        "area": 57,
+        "delay": 14,
+        "target": 52,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 10.539
+      },
+      "old": {
+        "area": 57,
+        "delay": 14,
+        "target": 52,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 11.574
+      }
+    },
+    {
+      "case": "holdout-case_017",
+      "old": {
+        "area": 7899,
+        "delay": 40,
+        "target": 40,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 466.558
+      },
+      "new": {
+        "area": 7899,
+        "delay": 40,
+        "target": 40,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 465.471
+      }
+    },
+    {
+      "case": "holdout-case_018",
+      "new": {
+        "area": 88,
+        "delay": 16,
+        "target": 44,
+        "target_met": true,
+        "assignments": 1024,
+        "valid": true,
+        "ms": 12.335
+      },
+      "old": {
+        "area": 88,
+        "delay": 16,
+        "target": 44,
+        "target_met": true,
+        "assignments": 1024,
+        "valid": true,
+        "ms": 12.296
+      }
+    },
+    {
+      "case": "holdout-case_019",
+      "old": {
+        "area": 85179,
+        "delay": 40,
+        "target": 46,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 1824.779
+      },
+      "new": {
+        "area": 85179,
+        "delay": 40,
+        "target": 46,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 1815.622
+      }
+    },
+    {
+      "case": "holdout-case_020",
+      "new": {
+        "area": 125,
+        "delay": 36,
+        "target": 52,
+        "target_met": true,
+        "assignments": 16384,
+        "valid": true,
+        "ms": 20.178
+      },
+      "old": {
+        "area": 125,
+        "delay": 36,
+        "target": 52,
+        "target_met": true,
+        "assignments": 16384,
+        "valid": true,
+        "ms": 20.083
+      }
+    },
+    {
+      "case": "holdout-case_021",
+      "old": {
+        "area": 2370,
+        "delay": 39,
+        "target": 40,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 473.617
+      },
+      "new": {
+        "area": 2370,
+        "delay": 39,
+        "target": 40,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 470.744
+      }
+    },
+    {
+      "case": "holdout-case_022",
+      "new": {
+        "area": 124,
+        "delay": 22,
+        "target": 44,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 15.239
+      },
+      "old": {
+        "area": 124,
+        "delay": 22,
+        "target": 44,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 15.178
+      }
+    },
+    {
+      "case": "holdout-case_023",
+      "old": {
+        "area": 948,
+        "delay": 46,
+        "target": 48,
+        "target_met": true,
+        "assignments": 1024,
+        "valid": true,
+        "ms": 69.674
+      },
+      "new": {
+        "area": 948,
+        "delay": 46,
+        "target": 48,
+        "target_met": true,
+        "assignments": 1024,
+        "valid": true,
+        "ms": 69.588
+      }
+    },
+    {
+      "case": "holdout-case_024",
+      "new": {
+        "area": 114,
+        "delay": 26,
+        "target": 52,
+        "target_met": true,
+        "assignments": 2048,
+        "valid": true,
+        "ms": 10.192
+      },
+      "old": {
+        "area": 114,
+        "delay": 26,
+        "target": 52,
+        "target_met": true,
+        "assignments": 2048,
+        "valid": true,
+        "ms": 10.214
+      }
+    },
+    {
+      "case": "holdout-case_025",
+      "old": {
+        "area": 116709,
+        "delay": 34,
+        "target": 48,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 1819.272
+      },
+      "new": {
+        "area": 116709,
+        "delay": 34,
+        "target": 48,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 1820.913
+      }
+    },
+    {
+      "case": "holdout-case_026",
+      "new": {
+        "area": 176,
+        "delay": 24,
+        "target": 44,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 69.795
+      },
+      "old": {
+        "area": 176,
+        "delay": 24,
+        "target": 44,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 70.622
+      }
+    },
+    {
+      "case": "holdout-case_027",
+      "old": {
+        "area": 1931,
+        "delay": 38,
+        "target": 48,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 603.459
+      },
+      "new": {
+        "area": 1931,
+        "delay": 38,
+        "target": 48,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 603.756
+      }
+    },
+    {
+      "case": "holdout-case_028",
+      "new": {
+        "area": 77,
+        "delay": 8,
+        "target": 52,
+        "target_met": true,
+        "assignments": 1024,
+        "valid": true,
+        "ms": 12.423
+      },
+      "old": {
+        "area": 77,
+        "delay": 8,
+        "target": 52,
+        "target_met": true,
+        "assignments": 1024,
+        "valid": true,
+        "ms": 12.329
+      }
+    },
+    {
+      "case": "holdout-case_029",
+      "old": {
+        "area": 651,
+        "delay": 34,
+        "target": 40,
+        "target_met": true,
+        "assignments": 2048,
+        "valid": true,
+        "ms": 48.15
+      },
+      "new": {
+        "area": 651,
+        "delay": 34,
+        "target": 40,
+        "target_met": true,
+        "assignments": 2048,
+        "valid": true,
+        "ms": 49.236
+      }
+    },
+    {
+      "case": "holdout-case_030",
+      "new": {
+        "area": 138,
+        "delay": 13,
+        "target": 44,
+        "target_met": true,
+        "assignments": 4096,
+        "valid": true,
+        "ms": 16.834
+      },
+      "old": {
+        "area": 138,
+        "delay": 13,
+        "target": 44,
+        "target_met": true,
+        "assignments": 4096,
+        "valid": true,
+        "ms": 15.664
+      }
+    }
+  ],
+  "ablation": [
+    {
+      "case": "stage1-case_001",
+      "whole": {
+        "area": 55838,
+        "delay": 76,
+        "target": 77,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 1600.515
+      },
+      "new": {
+        "area": 55838,
+        "delay": 76,
+        "target": 77,
+        "target_met": true,
+        "assignments": 32768,
+        "valid": true,
+        "ms": 1740.434
+      }
+    },
+    {
+      "case": "stage1-case_002",
+      "new": {
+        "area": 14445,
+        "delay": 61,
+        "target": 61,
+        "target_met": true,
+        "assignments": 16384,
+        "valid": true,
+        "ms": 1153.539
+      },
+      "whole": {
+        "area": 14967,
+        "delay": 60,
+        "target": 61,
+        "target_met": true,
+        "assignments": 16384,
+        "valid": true,
+        "ms": 1122.5
+      }
+    },
+    {
+      "case": "stage1-case_015",
+      "whole": {
+        "area": 32035,
+        "delay": 63,
+        "target": 81,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 1384.204
+      },
+      "new": {
+        "area": 31565,
+        "delay": 63,
+        "target": 81,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 1443.245
+      }
+    },
+    {
+      "case": "stage1-case_024",
+      "new": {
+        "area": 124467,
+        "delay": 72,
+        "target": 83,
+        "target_met": true,
+        "assignments": 262144,
+        "valid": true,
+        "ms": 1821.295
+      },
+      "whole": {
+        "area": 124467,
+        "delay": 72,
+        "target": 83,
+        "target_met": true,
+        "assignments": 262144,
+        "valid": true,
+        "ms": 1815.88
+      }
+    },
+    {
+      "case": "stage2-case_002",
+      "whole": {
+        "area": 50629,
+        "delay": 78,
+        "target": 86,
+        "target_met": true,
+        "assignments": 262144,
+        "valid": true,
+        "ms": 1807.469
+      },
+      "new": {
+        "area": 50225,
+        "delay": 85,
+        "target": 86,
+        "target_met": true,
+        "assignments": 262144,
+        "valid": true,
+        "ms": 1812.193
+      }
+    },
+    {
+      "case": "stage2-case_005",
+      "new": {
+        "area": 50884,
+        "delay": 69,
+        "target": 69,
+        "target_met": true,
+        "assignments": 131072,
+        "valid": true,
+        "ms": 1816.017
+      },
+      "whole": {
+        "area": 60516,
+        "delay": 69,
+        "target": 69,
+        "target_met": true,
+        "assignments": 131072,
+        "valid": true,
+        "ms": 1811.084
+      }
+    },
+    {
+      "case": "stage2-case_013",
+      "whole": {
+        "area": 97828,
+        "delay": 67,
+        "target": 78,
+        "target_met": true,
+        "assignments": 524288,
+        "valid": true,
+        "ms": 1819.377
+      },
+      "new": {
+        "area": 82368,
+        "delay": 68,
+        "target": 78,
+        "target_met": true,
+        "assignments": 524288,
+        "valid": true,
+        "ms": 1824.002
+      }
+    },
+    {
+      "case": "stage2-case_021",
+      "new": {
+        "area": 22221,
+        "delay": 69,
+        "target": 70,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 1305.791
+      },
+      "whole": {
+        "area": 22221,
+        "delay": 69,
+        "target": 70,
+        "target_met": true,
+        "assignments": 65536,
+        "valid": true,
+        "ms": 1255.715
+      }
+    }
+  ],
+  "schedule": {
+    "repeat011": [
+      {
+        "case": "stage2-case_011",
+        "old": {
+          "area": 52463,
+          "delay": 62,
+          "target": 79,
+          "target_met": true,
+          "assignments": 65536,
+          "valid": true,
+          "ms": 1808.446
+        },
+        "new": {
+          "area": 39886,
+          "delay": 78,
+          "target": 79,
+          "target_met": true,
+          "assignments": 65536,
+          "valid": true,
+          "ms": 1807.416
+        }
+      },
+      {
+        "case": "stage2-case_011",
+        "new": {
+          "area": 39886,
+          "delay": 78,
+          "target": 79,
+          "target_met": true,
+          "assignments": 65536,
+          "valid": true,
+          "ms": 1811.148
+        },
+        "old": {
+          "area": 52463,
+          "delay": 62,
+          "target": 79,
+          "target_met": true,
+          "assignments": 65536,
+          "valid": true,
+          "ms": 1811.226
+        }
+      },
+      {
+        "case": "stage2-case_011",
+        "old": {
+          "area": 52463,
+          "delay": 62,
+          "target": 79,
+          "target_met": true,
+          "assignments": 65536,
+          "valid": true,
+          "ms": 1809.261
+        },
+        "new": {
+          "area": 39886,
+          "delay": 78,
+          "target": 79,
+          "target_met": true,
+          "assignments": 65536,
+          "valid": true,
+          "ms": 1810.815
+        }
+      }
+    ]
+  }
+}

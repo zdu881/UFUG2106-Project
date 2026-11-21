@@ -1,0 +1,81 @@
+{
+  "started_utc": "2026-11-21T13:47:22.016301+00:00",
+  "status": "PASS",
+  "source_path": "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/submission/synth_stage2.cpp",
+  "case_count": 25,
+  "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.35",
+  "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+  "compiler": "/usr/bin/g++",
+  "commands": [
+    {
+      "name": "python-dependencies",
+      "argv": [
+        "/usr/bin/python3",
+        "-c",
+        "import numpy; print(numpy.__version__)"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.116
+    },
+    {
+      "name": "compiler-version",
+      "argv": [
+        "/usr/bin/g++",
+        "--version"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.002
+    },
+    {
+      "name": "build",
+      "argv": [
+        "/usr/bin/g++",
+        "-O2",
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/bank2/synth.cpp",
+        "-o",
+        "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/bank2/synth"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 5.626
+    },
+    {
+      "name": "official",
+      "argv": [
+        "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/bank2/evaluator",
+        "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/bank2/synth",
+        "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/bank2/cases",
+        "--report",
+        "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/bank2/official.csv",
+        "--save-outputs",
+        "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/bank2/outputs"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 27.866
+    },
+    {
+      "name": "independent",
+      "argv": [
+        "/usr/bin/python3",
+        "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/bank2/verifier/verify_all.py",
+        "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/bank2/cases",
+        "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/bank2/outputs",
+        "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/bank2/official.csv",
+        "/home/nyz/2106Proj/results/stage2-polish-20261121-nZFvli/bank2/independent.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 6.276
+    }
+  ],
+  "scope": "Named local case snapshot; not hidden-case or Stage 2 certification",
+  "summary": {
+    "passed": 25,
+    "target_met": 25,
+    "area_sum": 375502,
+    "runtime_median_ms": 329.848
+  },
+  "finished_utc": "2026-11-21T13:48:01.903100+00:00"
+}

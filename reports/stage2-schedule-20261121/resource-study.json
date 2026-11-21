@@ -1,0 +1,70 @@
+{
+  "memory": {
+    "case": "case_102.txt",
+    "hard_address_limit_kib": 65536,
+    "old_peak_rss_kib": 10240,
+    "old_verification": {
+      "case": "case_102.txt",
+      "n": 20,
+      "m": 8,
+      "assignments": 1048576,
+      "gates": 285,
+      "area": 667,
+      "delay": 68,
+      "target": 100,
+      "target_met": true,
+      "valid": true
+    },
+    "new_peak_rss_kib": 10180,
+    "new_verification": {
+      "case": "case_102.txt",
+      "n": 20,
+      "m": 8,
+      "assignments": 1048576,
+      "gates": 285,
+      "area": 667,
+      "delay": 68,
+      "target": 100,
+      "target_met": true,
+      "valid": true
+    },
+    "official_status": "MEMORY_LIMIT",
+    "official_wait4_kib": 106660,
+    "parent_controls": [
+      {
+        "parent_padding_mib": 0,
+        "after_exec_peak_kib": 10288,
+        "wait4_maxrss_kib": 9864,
+        "verification": {
+          "case": "case_102.txt",
+          "n": 20,
+          "m": 8,
+          "assignments": 1048576,
+          "gates": 285,
+          "area": 667,
+          "delay": 68,
+          "target": 100,
+          "target_met": true,
+          "valid": true
+        }
+      },
+      {
+        "parent_padding_mib": 96,
+        "after_exec_peak_kib": 10272,
+        "wait4_maxrss_kib": 104676,
+        "verification": {
+          "case": "case_102.txt",
+          "n": 20,
+          "m": 8,
+          "assignments": 1048576,
+          "gates": 285,
+          "area": 667,
+          "delay": 68,
+          "target": 100,
+          "target_met": true,
+          "valid": true
+        }
+      }
+    ]
+  }
+}

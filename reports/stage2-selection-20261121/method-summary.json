@@ -1,0 +1,22 @@
+{
+  "Submitted Stage 1": {
+    "targets": 50,
+    "area": 1206033,
+    "total_ms": 39886.594
+  },
+  "Previous packed solver": {
+    "targets": 50,
+    "area": 1001957,
+    "total_ms": 43160.345
+  },
+  "Round 5.1": {
+    "targets": 50,
+    "area": 1038445,
+    "total_ms": 15903.298
+  },
+  "Output selection": {
+    "targets": 50,
+    "area": 886004,
+    "total_ms": 32993.773
+  }
+}

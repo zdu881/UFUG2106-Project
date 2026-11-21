@@ -274,3 +274,16 @@ above target and informed the shallow mapper. A new 30-case suite was generated
 after freezing the source. All 30 circuits passed exhaustive checks and met
 their targets. Public results and the eight-case ablation are recorded in the
 [report](../reports/stage2-selection-20261121/UFUG2106_Group2_Stage2_Report.pdf).
+
+## 21 November — variable-order scheduling
+
+Codex traced the area regression on Stage 2 case 011 to the initial mapping
+sweep. It tried preserving late low-area output cones and a three-variable lookup
+cache before selecting the scheduling change. In three paired 011 runs
+the revised order produced 39,886 area and delay 78, versus 52,463 and 62.
+The 30-case fresh-seed holdout yielded the same total area for both schedules.
+The report generator now checks the independent area, delay, target and assignment
+count against the retained measurements. Codex rebuilt the package, repeated both
+public banks and the ablation, and assembled the [report](../reports/stage2-schedule-20261121/UFUG2106_Group2_Stage2_Report.pdf).
+The final code passed 21 unit tests and all 92 generated regression cases.
+The checker rejected six deliberately invalid circuits.

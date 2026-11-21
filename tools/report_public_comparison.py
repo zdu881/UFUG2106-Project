@@ -35,11 +35,16 @@ def output_choice_figure():
 
 
 def render(root, output, frozen_root=None, permutation_control=None, merged=False):
-    comparison_file = 'vs-submitted.json' if frozen_root else 'comparison.json'
+    retained = merged and frozen_root is None
+    run_root = root / 'evidence' if retained else root
+    if retained:
+        frozen_root = run_root
+    comparison_file = 'vs-submitted.json' if frozen_root and not retained else 'comparison.json'
     comparison = json.loads((root / comparison_file).read_text())
     rows = comparison['cases']
     control_path = root / 'control-comparison.json'
     controls = json.loads(control_path.read_text()) if merged and control_path.exists() else None
+    schedule = controls.get('schedule') if controls else None
     styles = getSampleStyleSheet()
     story = []
 
@@ -63,7 +68,7 @@ def render(root, output, frozen_root=None, permutation_control=None, merged=Fals
         for method, key in [('frozen', 'stage1_method'), ('prototype', 'improved_method')]:
             folder = root / f'{stage}-{method}'
             if frozen_root:
-                folder = frozen_root / f'{stage}-frozen' if method == 'frozen' else root / (f'bank{stage[-1]}' if merged else f'release{stage[-1]}')
+                folder = frozen_root / f'{stage}-frozen' if method == 'frozen' else run_root / (f'bank{stage[-1]}' if merged else f'release{stage[-1]}')
             manifest = json.loads((folder/'manifest.json').read_text())
             independent = json.loads((folder/'independent.json').read_text())
             group = [r for r in rows if r['stage'] == stage]
@@ -73,6 +78,12 @@ def render(root, output, frozen_root=None, permutation_control=None, merged=Fals
             official = read_csv(folder/'official.csv')
             if {r['case']: r[key] for r in group} != official:
                 raise ValueError(f'{stage} {method} comparison differs from its official CSV')
+            for replay in independent['cases']:
+                measured = official[replay['case']]
+                if replay['assignments'] != 1 << replay['n'] or any(
+                    replay[field] != measured[field] for field in ('area', 'delay', 'target_met')
+                ):
+                    raise ValueError(f"{stage} {method} {replay['case']} independent replay differs")
             metrics = [r[key] for r in group]
             summary.append([stage, method, sum(r['passed'] for r in metrics), sum(r['target_met'] for r in metrics),
                             f"{sum(r['area'] for r in metrics):,}", f"{median(r['runtime_ms'] for r in metrics):.1f}"])
@@ -81,11 +92,15 @@ def render(root, output, frozen_root=None, permutation_control=None, merged=Fals
         study = json.loads(study_path.read_text()) if study_path.exists() else None
         para('UFUG2106 | Stage 2 method improvement', 'Title')
         para('Group 2 | Zeyun DU (50025854) and Jincan Li (50032637)')
-        para('Selecting a circuit for each output' if controls else 'Two searches share one time budget', 'Heading2')
+        heading = 'Selecting a circuit for each output' if controls else 'Two searches share one time budget'
+        para('Comparing variable orders before refining their mappings' if schedule else heading, 'Heading2')
         para('The submitted Stage 1 method splits a truth table into cofactors, shares repeated functions in a reduced ordered BDD, then maps candidate variable orders into the permitted gates. Variable order and gate polarity both affect the area of the resulting circuit.')
         if controls:
             para('The Stage 2 solver builds a natural-order circuit from packed truth columns. It measures which inputs affect each output and tries shared and output-specific variable orders, with and without complemented edges. A two-input decoder shares selectors across four cofactors. If the first search misses the target, a row/column decomposition offers a shallower path using balanced gate trees.')
-            para('Completed candidates are joined by matching gate type and inputs. The solver can replace one output while retaining the gates used by others. It ranks moves by excess delay, reachable area and delay. The optional search budget is capped at 1.8 seconds and 45% of a positive case limit. Building the initial circuit and completing a graph pass can extend beyond that window.')
+            if schedule:
+                para('The solver first maps the natural order with one timing weight. It compares other orders before varying that weight on the best measured mappings. It can select individual outputs across circuits, accounting for shared gates. It ranks by delay above target, area and delay. Optional search uses up to 1.8 seconds or 45% of a positive limit, whichever is smaller. A graph pass can finish later.')
+            else:
+                para('Completed candidates are joined by matching gate type and inputs. The solver can replace one output while retaining the gates used by others. It ranks moves by excess delay, reachable area and delay. The optional search budget is capped at 1.8 seconds and 45% of a positive case limit. Building the initial circuit and completing a graph pass can extend beyond that window.')
         elif study:
             para('Each output occupies a packed bit column. XOR and population counts identify which inputs change that output. Both BDD builders skip independent inputs. The first search compares exact and sampled influence orders on the full table. Round 5.1 tests the reverse of natural order first and refines the winner using measured gate area and delay.')
         else:
@@ -161,7 +176,8 @@ def render(root, output, frozen_root=None, permutation_control=None, merged=Fals
         group = controls['holdout']
         common = [r for r in group if all(r[k].get('target_met') for k in ('old','new'))]
         grid = [['Method', 'Valid', 'Delay met', 'Area on paired targets', 'Total ms']]
-        for k, name in [('old','Previous packed'), ('new','Output selection')]:
+        labels = ('Previous selection', 'Revised schedule') if schedule else ('Previous packed', 'Output selection')
+        for k, name in zip(('old', 'new'), labels):
             valid = [r[k] for r in group if r[k]['valid']]
             grid.append([name, f'{len(valid)} / {len(group)}',
                          f"{sum(r['target_met'] for r in valid)} / {len(group)}",
@@ -169,10 +185,22 @@ def render(root, output, frozen_root=None, permutation_control=None, merged=Fals
                          f"{sum(r['ms'] for r in valid):,.0f}"])
         table(grid)
         para(f'The area column uses the {len(common)} functions where both methods reached the delay target. The benchmark covers generated functions with 10 to 16 inputs. The course also grades 50 hidden cases.')
-        prior = json.loads((root/'vs-previous.json').read_text())['cases']
+        previous_file = 'vs-packed.json' if retained and not schedule else 'vs-previous.json'
+        prior = json.loads((root / previous_file).read_text())['cases']
         old_delay = median(r['stage1_method']['delay'] for r in prior)
         new_delay = median(r['improved_method']['delay'] for r in prior)
-        para(f'On the original public cases the median circuit delay went from {old_delay:g} to {new_delay:g}. Both solvers reached every public target. The new solver uses some of that timing slack to save gates.')
+        if schedule:
+            replicates = schedule['repeat011']
+            def span(tag, field):
+                values = [r[tag][field] for r in replicates]
+                a, b = min(values), max(values)
+                return f'{a:,}' if a == b else f'{a:,} to {b:,}'
+            savings = [-r['area_delta'] for r in prior]
+            case_saving = next(-r['area_delta'] for r in prior if r['stage'] == 'stage2' and r['case'] == 'case_011.txt')
+            para(f"Three paired repeats of Stage 2 case 011 gave areas of {span('old','area')} previously and {span('new','area')} with the revised schedule. Its target is {replicates[0]['new']['target']}. Delay was {span('old','delay')} previously and {span('new','delay')} after the change. This case accounts for {case_saving:,} of the {sum(savings):,} public area units saved.")
+        timing_note = ('The two schedules used the same time budget.' if schedule else
+                       'The new solver uses some of that timing slack to save gates.')
+        para(f'On the original public cases the median circuit delay went from {old_delay:g} to {new_delay:g}. Both solvers reached every public target. {timing_note}')
         para('What does output selection contribute?', 'Heading2')
         pairs = controls['ablation']
         gains = [r['whole']['area'] - r['new']['area'] for r in pairs]
@@ -224,6 +252,6 @@ if __name__ == '__main__':
     parser.add_argument('--permutation-control', type=Path, help='Verified control-summary.json for the input-renaming experiment')
     parser.add_argument('--merged', action='store_true', help='Report the integrated Round 5.1 and Stage 2 run')
     args = parser.parse_args()
-    if args.merged and (not args.frozen_root or args.permutation_control):
-        parser.error('--merged requires --frozen-root and original public-bank measurements')
+    if args.merged and args.permutation_control:
+        parser.error('--merged uses the original public banks')
     render(args.results,args.pdf,args.frozen_root,args.permutation_control,args.merged)

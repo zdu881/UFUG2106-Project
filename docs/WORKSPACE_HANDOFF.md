@@ -123,3 +123,12 @@ output and charges shared gates once. The tested source package builds with
 [Report](../reports/stage2-selection-20261121/UFUG2106_Group2_Stage2_Report.pdf) ·
 [Per-case comparison](../reports/stage2-selection-20261121/comparison.json) ·
 [Held-out and ablation results](../reports/stage2-selection-20261121/control-comparison.json).
+
+## 21 November — variable-order scheduling
+
+The [selected package report](../reports/stage2-schedule-20261121/UFUG2106_Group2_Stage2_Report.pdf) records 872,632 total area and 32.87 s of synthesis time
+on 50 released inputs. It includes the submitted Stage 1 comparator, the
+previous output-selection solver and a fresh generated control. Rebuild the report
+with the command in the project README. The local publication branch is
+`stage2-prepared-20261121`. GitHub identified the existing origin as public on
+21 November. The full candidate includes restricted course-team materials.
