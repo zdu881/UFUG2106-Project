@@ -300,3 +300,10 @@ checker. Three dense inputs switched from MEMORY_LIMIT to PASS. The original
 The final ZIP also passed the preceding 30-function generated set. All 22 unit tests
 and 92 generated regression cases passed. The UBSan build repeated the 92 cases
 and the 17-input streaming control.
+
+## 21 November — grader memory accounting
+
+Codex checked the live assignment attachment, reproduced the official result with
+the extracted submission source, and built a separate zero-gate example. Paired
+launcher tests included a genuine 80 MiB control. An English teaching-team note
+and reproducible evidence are in the [diagnostic directory](../reports/stage2-rss-accounting-20261121/README.md).

@@ -14,7 +14,10 @@ On three generated dense tables, with 32, 48 and 64 MiB limits, the old solver
 failed official evaluation and the new one passed. All three new circuits also
 passed independent full truth-table replay. The separate structured 20-input
 case still receives MEMORY_LIMIT from the course evaluator at 64 MiB. Its circuit
-passed all 1,048,576 assignments under a hard address-space cap.
+passed all 1,048,576 assignments under a hard address-space cap. The same
+evaluator flags a zero-gate eight-wire example. A lightweight grader-side worker
+measures the solver below the limit and detects a real over-limit process.
+[Reproducer and measurements](reports/stage2-rss-accounting-20261121/README.md)
 
 Run `make stage2-source` to create `artifacts/UFUG2106_Group2_Stage2_Source.zip`.
 Rebuild the report with Python and ReportLab:

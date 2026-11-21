@@ -1,0 +1,181 @@
+{
+  "platform": "6.8.0-149-generic",
+  "course_file_id": 869388,
+  "binary_sha256": "142361d7ce18bc47dea6a07538db79a588b3afbf446526c1d1246f4968b3d0ca",
+  "solver_commit": "62b48a8",
+  "limit_kib": 65536,
+  "cases": {
+    "project": {
+      "official": "FAIL",
+      "solver_exit_code": 0,
+      "official_wait4_kib": 106680,
+      "direct_capped_peak_kib": 10112,
+      "circuit": {
+        "case": "case_102.txt",
+        "n": 20,
+        "m": 8,
+        "assignments": 1048576,
+        "gates": 285,
+        "area": 667,
+        "delay": 68,
+        "target": 100,
+        "target_met": true,
+        "valid": true
+      },
+      "official_reason": "MEMORY_LIMIT",
+      "launcher_controls": [
+        {
+          "input_bytes": 0,
+          "input_tokens": 0,
+          "parent_rss_kib": 10916,
+          "mode": "empty-direct",
+          "solver": {
+            "peak_kib": 10112,
+            "over_64_mib": false
+          },
+          "over_limit_control": {
+            "peak_kib": 91264,
+            "over_64_mib": true
+          }
+        },
+        {
+          "input_bytes": 0,
+          "input_tokens": 0,
+          "parent_rss_kib": 10916,
+          "mode": "empty-worker",
+          "solver": {
+            "peak_kib": 10116,
+            "over_64_mib": false
+          },
+          "over_limit_control": {
+            "peak_kib": 91212,
+            "over_64_mib": true
+          }
+        },
+        {
+          "input_bytes": 9437217,
+          "input_tokens": 1048587,
+          "parent_rss_kib": 77896,
+          "mode": "loaded-direct",
+          "solver": {
+            "peak_kib": 73468,
+            "over_64_mib": true
+          },
+          "over_limit_control": {
+            "peak_kib": 91216,
+            "over_64_mib": true
+          }
+        },
+        {
+          "input_bytes": 9437217,
+          "input_tokens": 1048587,
+          "parent_rss_kib": 77896,
+          "mode": "loaded-worker",
+          "solver": {
+            "peak_kib": 10112,
+            "over_64_mib": false
+          },
+          "over_limit_control": {
+            "peak_kib": 91212,
+            "over_64_mib": true
+          }
+        }
+      ]
+    },
+    "one_wire": {
+      "official": "PASS",
+      "solver_exit_code": 0,
+      "official_wait4_kib": 28680,
+      "direct_capped_peak_kib": 14540,
+      "circuit": {
+        "case": "projection-1.txt",
+        "n": 20,
+        "m": 1,
+        "assignments": 1048576,
+        "gates": 0,
+        "area": 0,
+        "delay": 0,
+        "target": 100,
+        "target_met": true,
+        "valid": true
+      }
+    },
+    "eight_wires": {
+      "official": "FAIL",
+      "solver_exit_code": 0,
+      "official_wait4_kib": 107616,
+      "direct_capped_peak_kib": 28928,
+      "circuit": {
+        "case": "projection-8.txt",
+        "n": 20,
+        "m": 8,
+        "assignments": 1048576,
+        "gates": 0,
+        "area": 0,
+        "delay": 0,
+        "target": 100,
+        "target_met": true,
+        "valid": true
+      },
+      "official_reason": "MEMORY_LIMIT",
+      "launcher_controls": [
+        {
+          "input_bytes": 0,
+          "input_tokens": 0,
+          "parent_rss_kib": 10848,
+          "mode": "empty-direct",
+          "solver": {
+            "peak_kib": 28880,
+            "over_64_mib": false
+          },
+          "over_limit_control": {
+            "peak_kib": 91212,
+            "over_64_mib": true
+          }
+        },
+        {
+          "input_bytes": 0,
+          "input_tokens": 0,
+          "parent_rss_kib": 10848,
+          "mode": "empty-worker",
+          "solver": {
+            "peak_kib": 28880,
+            "over_64_mib": false
+          },
+          "over_limit_control": {
+            "peak_kib": 91216,
+            "over_64_mib": true
+          }
+        },
+        {
+          "input_bytes": 9437218,
+          "input_tokens": 1048587,
+          "parent_rss_kib": 77900,
+          "mode": "loaded-direct",
+          "solver": {
+            "peak_kib": 73380,
+            "over_64_mib": true
+          },
+          "over_limit_control": {
+            "peak_kib": 91212,
+            "over_64_mib": true
+          }
+        },
+        {
+          "input_bytes": 9437218,
+          "input_tokens": 1048587,
+          "parent_rss_kib": 77900,
+          "mode": "loaded-worker",
+          "solver": {
+            "peak_kib": 28880,
+            "over_64_mib": false
+          },
+          "over_limit_control": {
+            "peak_kib": 91216,
+            "over_64_mib": true
+          }
+        }
+      ]
+    }
+  }
+}
