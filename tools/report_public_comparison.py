@@ -34,6 +34,25 @@ def output_choice_figure():
     return d
 
 
+def memory_path_figure():
+    from reportlab.graphics.shapes import Drawing, Line, Polygon, Rect, String
+    fig = Drawing(475, 86)
+    ink = colors.HexColor('#224657')
+    for y, title, detail in [(48, 'Complete candidate', 'Compare mapped area and delay'),
+                             (5, 'Memory pressure before completion', 'Write cofactors as gates are formed')]:
+        fig.add(Rect(195, y, 207, 32, fillColor=colors.HexColor('#eef3f4'), strokeColor=ink))
+        fig.add(String(201, y+19, title, fontName='Helvetica-Bold', fontSize=9))
+        fig.add(String(201, y+6, detail, fontSize=8))
+        fig.add(Line(145, y+16, 190, y+16, strokeColor=ink))
+        fig.add(Polygon([194,y+16,188,y+19,188,y+13], fillColor=ink, strokeColor=ink))
+    fig.add(Line(145, 21, 145, 64, strokeColor=ink))
+    fig.add(Line(114, 42, 145, 42, strokeColor=ink))
+    fig.add(Rect(1, 26, 113, 32, fillColor=ink, strokeColor=ink))
+    fig.add(String(7, 39, 'Construct first circuit', fontName='Helvetica-Bold', fontSize=9,
+                   fillColor=colors.white))
+    return fig
+
+
 def render(root, output, frozen_root=None, permutation_control=None, merged=False):
     retained = merged and frozen_root is None
     run_root = root / 'evidence' if retained else root
@@ -45,6 +64,8 @@ def render(root, output, frozen_root=None, permutation_control=None, merged=Fals
     control_path = root / 'control-comparison.json'
     controls = json.loads(control_path.read_text()) if merged and control_path.exists() else None
     schedule = controls.get('schedule') if controls else None
+    memory_path = root / 'memory-controls.json'
+    memory_controls = json.loads(memory_path.read_text()) if merged and memory_path.exists() else None
     styles = getSampleStyleSheet()
     story = []
 
@@ -93,11 +114,14 @@ def render(root, output, frozen_root=None, permutation_control=None, merged=Fals
         para('UFUG2106 | Stage 2 method improvement', 'Title')
         para('Group 2 | Zeyun DU (50025854) and Jincan Li (50032637)')
         heading = 'Selecting a circuit for each output' if controls else 'Two searches share one time budget'
-        para('Comparing variable orders before refining their mappings' if schedule else heading, 'Heading2')
+        heading = 'Comparing variable orders before refining their mappings' if schedule else heading
+        para('Synthesizing under a memory limit' if memory_controls else heading, 'Heading2')
         para('The submitted Stage 1 method splits a truth table into cofactors, shares repeated functions in a reduced ordered BDD, then maps candidate variable orders into the permitted gates. Variable order and gate polarity both affect the area of the resulting circuit.')
-        if controls:
+        if controls or memory_controls:
             para('The Stage 2 solver builds a natural-order circuit from packed truth columns. It measures which inputs affect each output and tries shared and output-specific variable orders, with and without complemented edges. A two-input decoder shares selectors across four cofactors. If the first search misses the target, a row/column decomposition offers a shallower path using balanced gate trees.')
-            if schedule:
+            if memory_controls:
+                para('The search ranks mapped candidates by delay above target, shared area and delay. It can choose a different candidate for each output. Optional search has up to 1.8 seconds or 45% of a positive runtime limit. When the initial graph exhausts its memory allowance, the solver writes Shannon gates directly and caches small cofactors. Page 4 shows the memory and circuit costs.')
+            elif schedule:
                 para('The solver first maps the natural order with one timing weight. It compares other orders before varying that weight on the best measured mappings. It can select individual outputs across circuits, accounting for shared gates. It ranks by delay above target, area and delay. Optional search uses up to 1.8 seconds or 45% of a positive limit, whichever is smaller. A graph pass can finish later.')
             else:
                 para('Completed candidates are joined by matching gate type and inputs. The solver can replace one output while retaining the gates used by others. It ranks moves by excess delay, reachable area and delay. The optional search budget is capped at 1.8 seconds and 45% of a positive case limit. Building the initial circuit and completing a graph pass can extend beyond that window.')
@@ -105,7 +129,7 @@ def render(root, output, frozen_root=None, permutation_control=None, merged=Fals
             para('Each output occupies a packed bit column. XOR and population counts identify which inputs change that output. Both BDD builders skip independent inputs. The first search compares exact and sampled influence orders on the full table. Round 5.1 tests the reverse of natural order first and refines the winner using measured gate area and delay.')
         else:
             para('The merged program builds its first valid circuit in natural order. Its first search tests an influence-based order, screens other orders by BDD size and refines candidates using reachable gate area and delay. The second search uses the Round 5.1 mapper, which also considers two-level covers for outputs with small support. It tries rebalancing, area recovery within the delay target, algebraic rewriting and polarity changes.')
-        if not controls:
+        if not controls and not memory_controls:
             para('Both searches rank circuits by excess delay, area and delay. The nominal budget is capped at three seconds and at 60% of a positive case limit. BDD receives half when Round 5.1 supports the gate costs and target, and the full budget otherwise. Round 5.1 checks available memory before allocating its row buffers. A zero-area, zero-delay first circuit ends the search. The first circuit and some graph passes can extend beyond their scheduled window.')
         para('Released cases', 'Heading2')
         table(summary)
@@ -119,7 +143,9 @@ def render(root, output, frozen_root=None, permutation_control=None, merged=Fals
                for name, v in totals.items()])
         smallest = min(totals, key=lambda name: totals[name]['area'])
         fastest = min(totals, key=lambda name: totals[name]['total_ms'])
-        if study:
+        if memory_controls:
+            para('Both public banks use time limits. The separate memory-limited experiments on page 4 exercise inputs that can exhaust RAM during construction of the first circuit.')
+        elif study:
             memory = study['memory']
             para(f"{smallest} had the smallest total area. {fastest} had the shortest total synthesis time. On the 64 MiB stress case, the solver peaked at {memory['new_peak_rss_kib']:,} KiB under an enforced address-space cap and matched every row. The official evaluator reported MEMORY_LIMIT. Its wait4 reading was {memory['official_wait4_kib']:,} KiB.")
         else:
@@ -165,6 +191,33 @@ def render(root, output, frozen_root=None, permutation_control=None, merged=Fals
             data.append([r['case'][5:8],a['status']+' / '+b['status'],a['area'],b['area'],a['delay'],b['delay'],
                          f"{a['runtime_ms']:.3f}",f"{b['runtime_ms']:.3f}"])
         table(data)
+    if memory_controls:
+        story.append(PageBreak())
+        para('When the first circuit exceeds memory', 'Title')
+        para('The old solver could hold the decision diagram, mapping hash table and gate vectors at the same time. Limiting later search did little for an input that already exceeded its allowance during the first mapping.')
+        story.append(memory_path_figure())
+        para('Streaming Shannon expansion', 'Heading2')
+        para('For selector x, let L and H be its two cofactors. Writing L and H first makes both gate IDs available when emitting (NOT(x) AND L) OR (x AND H). The dual product of clauses is available when OR gates are cheaper. Equal cofactors skip x. At four or fewer remaining inputs, a truth mask indexes a shared lookup table. A fixed-size gate cache reuses recent fan-ins. An eviction can add gates while preserving the truth function.')
+        para('Paired memory controls', 'Heading2')
+        para('Old and new programs ran on identical inputs with the course evaluator. Each program also ran under a Linux address-space cap matching the input. Peak RSS below is from this separate capped run. The independent checker replayed every row of each new circuit.')
+        data = [['Input', 'Cap MiB', 'Old official', 'New official', 'Peak KiB', 'New area', 'Delay / target']]
+        for record in memory_controls:
+            old, new = record['old'], record['new']
+            checked = new['replay']
+            data.append([record['case'].removesuffix('.txt'), record['ram_kib']//1024,
+                         old['official']['status'], new['official']['status'],
+                         f"{new['direct']['peak_kib']:,}", f"{checked['area']:,}",
+                         f"{checked['delay']} / {checked['target']}"])
+        table(data)
+        para('The first three tables use independent random output bits. The last input is the earlier structured 20-input stress case. Its circuit still passes the hard address-space cap. The course evaluator still reports MEMORY_LIMIT. A prior controlled experiment showed that the parent process can raise the peak reported for the child.')
+        para('What the memory limit costs', 'Heading2')
+        comparison = next(r for r in memory_controls if r['case'] == 'dense19.txt')
+        free = comparison['unlimited']
+        limited = comparison['new']['replay']
+        para(f"Relaxing only the RAM limit on dense19 produced an independently verified circuit of area {free['area']:,} and delay {free['delay']}. With 64 MiB, the streaming circuit used area {limited['area']:,} and delay {limited['delay']}. Both met the target of {limited['target']}. The fallback trades the memory used for global sharing against the number of gates it emits.")
+        suite = read_csv(root/'evidence'/'generated-30.csv').values()
+        para('Replaying the generated comparison set', 'Heading2')
+        para(f'The current package passed {sum(r["passed"] for r in suite)} of {len(suite)} tests on the six-family set used for the previous scheduling study and met {sum(r["target_met"] for r in suite)} delay targets. These functions include adders, lookup tables, threshold functions and dense random outputs. The earlier eight-case ablation of output selection saved 26,488 area units on that version. The hidden grade cases remain with the course.')
     if controls:
         story.append(PageBreak())
         para('Output selection and independent tests', 'Title')

@@ -1,0 +1,207 @@
+[
+  {
+    "case": "dense17.txt",
+    "ram_kib": 32768,
+    "old": {
+      "direct": {
+        "exit": 1,
+        "peak_kib": 24640
+      },
+      "official": {
+        "case": "dense17.txt",
+        "status": "FAIL",
+        "area": "",
+        "delay": "",
+        "runtime_ms": "",
+        "target_met": ""
+      },
+      "official_reason": "MEMORY_LIMIT"
+    },
+    "new": {
+      "direct": {
+        "exit": 0,
+        "peak_kib": 22776
+      },
+      "official": {
+        "case": "dense17.txt",
+        "status": "PASS",
+        "area": "296569",
+        "delay": "49",
+        "runtime_ms": "96.389",
+        "target_met": "yes"
+      },
+      "replay": {
+        "case": "dense17.txt",
+        "n": 17,
+        "m": 5,
+        "assignments": 131072,
+        "gates": 154007,
+        "area": 296569,
+        "delay": 49,
+        "target": 100,
+        "target_met": true,
+        "valid": true
+      }
+    }
+  },
+  {
+    "case": "dense18.txt",
+    "ram_kib": 49152,
+    "new": {
+      "direct": {
+        "exit": 0,
+        "peak_kib": 35904
+      },
+      "official": {
+        "case": "dense18.txt",
+        "status": "PASS",
+        "area": "690092",
+        "delay": "52",
+        "runtime_ms": "226.895",
+        "target_met": "yes"
+      },
+      "replay": {
+        "case": "dense18.txt",
+        "n": 18,
+        "m": 6,
+        "assignments": 262144,
+        "gates": 345055,
+        "area": 690092,
+        "delay": 52,
+        "target": 100,
+        "target_met": true,
+        "valid": true
+      }
+    },
+    "old": {
+      "direct": {
+        "exit": 1,
+        "peak_kib": 35896
+      },
+      "official": {
+        "case": "dense18.txt",
+        "status": "FAIL",
+        "area": "",
+        "delay": "",
+        "runtime_ms": "",
+        "target_met": ""
+      },
+      "official_reason": "MEMORY_LIMIT"
+    }
+  },
+  {
+    "case": "dense19.txt",
+    "ram_kib": 65536,
+    "old": {
+      "direct": {
+        "exit": 1,
+        "peak_kib": 56336
+      },
+      "official": {
+        "case": "dense19.txt",
+        "status": "FAIL",
+        "area": "",
+        "delay": "",
+        "runtime_ms": "",
+        "target_met": ""
+      },
+      "official_reason": "MEMORY_LIMIT"
+    },
+    "new": {
+      "direct": {
+        "exit": 0,
+        "peak_kib": 50488
+      },
+      "official": {
+        "case": "dense19.txt",
+        "status": "PASS",
+        "area": "1083284",
+        "delay": "55",
+        "runtime_ms": "306.552",
+        "target_met": "yes"
+      },
+      "replay": {
+        "case": "dense19.txt",
+        "n": 19,
+        "m": 4,
+        "assignments": 524288,
+        "gates": 447994,
+        "area": 1083284,
+        "delay": 55,
+        "target": 100,
+        "target_met": true,
+        "valid": true
+      }
+    },
+    "unlimited": {
+      "case": "dense19-no-ram.txt",
+      "n": 19,
+      "m": 4,
+      "assignments": 524288,
+      "gates": 401904,
+      "area": 991102,
+      "delay": 55,
+      "target": 100,
+      "target_met": true,
+      "valid": true
+    }
+  },
+  {
+    "case": "case_102.txt",
+    "ram_kib": 65536,
+    "new": {
+      "direct": {
+        "exit": 0,
+        "peak_kib": 10116
+      },
+      "official": {
+        "case": "case_102.txt",
+        "status": "FAIL",
+        "area": "",
+        "delay": "",
+        "runtime_ms": "",
+        "target_met": ""
+      },
+      "official_reason": "MEMORY_LIMIT",
+      "replay": {
+        "case": "case_102.txt",
+        "n": 20,
+        "m": 8,
+        "assignments": 1048576,
+        "gates": 285,
+        "area": 667,
+        "delay": 68,
+        "target": 100,
+        "target_met": true,
+        "valid": true
+      }
+    },
+    "old": {
+      "direct": {
+        "exit": 0,
+        "peak_kib": 10112
+      },
+      "official": {
+        "case": "case_102.txt",
+        "status": "FAIL",
+        "area": "",
+        "delay": "",
+        "runtime_ms": "",
+        "target_met": ""
+      },
+      "official_reason": "MEMORY_LIMIT",
+      "replay": {
+        "case": "case_102.txt",
+        "n": 20,
+        "m": 8,
+        "assignments": 1048576,
+        "gates": 285,
+        "area": 667,
+        "delay": 68,
+        "target": 100,
+        "target_met": true,
+        "valid": true
+      }
+    }
+  }
+]

@@ -287,3 +287,16 @@ count against the retained measurements. Codex rebuilt the package, repeated bot
 public banks and the ablation, and assembled the [report](../reports/stage2-schedule-20261121/UFUG2106_Group2_Stage2_Report.pdf).
 The final code passed 21 unit tests and all 92 generated regression cases.
 The checker rejected six deliberately invalid circuits.
+
+## 21 November — constructing a circuit under a memory limit
+
+Codex reproduced a missing-output failure during the initial circuit construction
+on a 19-input dense truth table. It added memory checks on that path, released the
+mapper before gate balancing, implemented streaming Shannon expansion with bounded
+gate reuse, and ran the packed source through the course evaluator and independent
+checker. Three dense inputs switched from MEMORY_LIMIT to PASS. The original
+20-input structured control still fails the course evaluator at 64 MiB.
+[Paired measurements](../reports/stage2-memory-20261121/memory-controls.json).
+The final ZIP also passed the preceding 30-function generated set. All 22 unit tests
+and 92 generated regression cases passed. The UBSan build repeated the 92 cases
+and the 17-input streaming control.

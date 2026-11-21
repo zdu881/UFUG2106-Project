@@ -1,5 +1,6 @@
 """Integration checks for optional-search admission and the two-path CLI."""
 import importlib.util
+import random
 from pathlib import Path
 import subprocess
 import sys
@@ -89,6 +90,19 @@ class Stage2Resources(unittest.TestCase):
         result = checker.verify(inp, out)
         self.assertEqual(result['assignments'], 1 << 20)
         self.assertTrue(result['target_met'])
+
+    def test_dense_table_streams_under_hard_memory_limit(self):
+        case, out = self.directory / 'dense.txt', self.directory / 'dense.out'
+        rng = random.Random(210698)
+        rows = ' '.join(format(rng.getrandbits(4), '04b') for _ in range(1 << 16))
+        case.write_text(f'16\n4\n{rows}\n2 1\n3 2\n1 1\n100\n10000\n16384\n')
+        result = subprocess.run(['prlimit', '--as=16777216', '--', self.binary, case, out],
+                                text=True, capture_output=True, check=True, timeout=10)
+        self.assertIn('streaming=1', result.stderr)
+        score = checker.verify(case, out)
+        self.assertEqual(score['assignments'], 1 << 16)
+        self.assertTrue(score['target_met'])
+        self.assertIn(f"area={score['area']} delay={score['delay']}", result.stderr)
 
     def test_full_support_skips_oversized_optional_buffer(self):
         inp, out = self.directory / 'parity.txt', self.directory / 'parity.out'

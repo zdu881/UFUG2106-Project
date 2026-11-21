@@ -132,3 +132,10 @@ previous output-selection solver and a fresh generated control. Rebuild the repo
 with the command in the project README. The local publication branch is
 `stage2-prepared-20261121`. GitHub identified the existing origin as public on
 21 November. The full candidate includes restricted course-team materials.
+
+## 21 November — constructing a circuit under a memory limit
+
+The current candidate is the streaming-memory revision. Its four-page
+[report](../reports/stage2-memory-20261121/UFUG2106_Group2_Stage2_Report.pdf)
+and source ZIP use the build and reproduction commands at the top of the README.
+The repository was set to private before the full Stage 2 materials were pushed.

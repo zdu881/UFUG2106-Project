@@ -46,3 +46,13 @@ the area saving was 13,372. Excluding that case the total area
 fell by 795 units. The median circuit delay was 51.5.
 On 30 fresh generated functions both schedules met every target and used
 the same aggregate area. [Measurements](../reports/stage2-schedule-20261121/control-comparison.json).
+
+## 21 November — constructing a circuit under a memory limit
+
+**Why can streaming preserve correctness when cache entries get evicted?**
+Each recursive call emits the gates for its two cofactors before emitting the
+selector. For x=0 the resulting signal equals the low cofactor and for x=1 it
+equals the high cofactor. A cached gate is reused only when its operation and
+both input IDs match. Eviction can duplicate a gate. Earlier IDs remain valid in
+the output file. The tradeoff is measurable in the capped and uncapped dense19
+circuits. [Measurements](../reports/stage2-memory-20261121/memory-controls.json).

@@ -3,34 +3,31 @@
 ## Stage 2 public comparison
 
 Build the integrated solver with `make stage2`, then run `./build/synth_stage2 INPUT OUTPUT`.
-The solver compares variable orders before refining their area/delay weights. It
-can select the implementation of each output independently while accounting for
-shared gates. Both the course evaluator and the independent checker passed all
-50 public cases from the unpacked ZIP. All delay targets were met, with
-872,632 total area and 32.87 s of synthesis time on this workstation.
-The previous output-selection solver used 886,004 area and 32.99 s.
-Across three paired runs of Stage 2 case 011, area fell from 52,463 to 39,886 and
-delay rose from 62 to 78 (target 79). Both solvers met all 30 targets on a fresh
-generated set and used the same aggregate area.
+The Stage 2 solver searches variable orders and chooses output circuits by their
+mapped area and delay, counting shared gates once. If memory runs short before
+the first circuit is complete, it writes gates in dependency order using bounded
+lookup tables. The retested source ZIP passed all 50 released cases and all delay
+targets. Area and delay matched the preceding candidate on every case. The total
+area was 872,632 and total synthesis time was 32.86 s on this workstation.
+
+On three generated dense tables, with 32, 48 and 64 MiB limits, the old solver
+failed official evaluation and the new one passed. All three new circuits also
+passed independent full truth-table replay. The separate structured 20-input
+case still receives MEMORY_LIMIT from the course evaluator at 64 MiB. Its circuit
+passed all 1,048,576 assignments under a hard address-space cap.
 
 Run `make stage2-source` to create `artifacts/UFUG2106_Group2_Stage2_Source.zip`.
-Rebuild the four-page report from the retained official CSVs and independent
-replays with Python and ReportLab:
+Rebuild the report with Python and ReportLab:
 
 ```sh
-python3 tools/report_public_comparison.py reports/stage2-schedule-20261121 /tmp/ufug2106-report.pdf --merged
+python3 tools/report_public_comparison.py reports/stage2-memory-20261121 /tmp/ufug2106-report.pdf --merged
 ```
 
-The 64 MiB stress case passes with a hard address-space limit. The course evaluator
-still reports MEMORY_LIMIT on this synthetic input.
-
-[Report](reports/stage2-schedule-20261121/UFUG2106_Group2_Stage2_Report.pdf) ·
-[Comparison with Stage 1](reports/stage2-schedule-20261121/comparison.json) ·
-[Comparison with prior schedule](reports/stage2-schedule-20261121/vs-previous.json) ·
-[Held-out, scheduling and ablation tests](reports/stage2-schedule-20261121/control-comparison.json) ·
-[Holdout generator](reports/stage2-schedule-20261121/generate_holdout.py) ·
-[Memory](reports/stage2-schedule-20261121/resource-study.json) ·
-[Previous output-selection study](reports/stage2-selection-20261121/UFUG2106_Group2_Stage2_Report.pdf) ·
+[Report](reports/stage2-memory-20261121/UFUG2106_Group2_Stage2_Report.pdf) ·
+[Stage 1 comparison](reports/stage2-memory-20261121/comparison.json) ·
+[Memory controls](reports/stage2-memory-20261121/memory-controls.json) ·
+[Dense input generator](reports/stage2-memory-20261121/generate_dense.py) ·
+[Prior variable-order and output-selection experiments](reports/stage2-schedule-20261121/UFUG2106_Group2_Stage2_Report.pdf) ·
 [Round 5.1 attribution](src/round51/ORIGIN.md)
 
 Workspace: `~/2106Proj`. Coding-agent entry: [AGENTS.md](AGENTS.md);
@@ -92,7 +89,7 @@ The selection criterion is delay-excess first, then area, then delay; runtime is
 
 ## Remaining project gates
 
-- The [Stage 2 report](reports/stage2-schedule-20261121/UFUG2106_Group2_Stage2_Report.pdf) compares the submitted Stage 1 method with the Stage 2 candidate on all 50 released inputs.
+- The [Stage 2 report](reports/stage2-memory-20261121/UFUG2106_Group2_Stage2_Report.pdf) compares the submitted Stage 1 method with the Stage 2 candidate on all 50 released inputs.
 - Stage 2 is due on 4 December at 23:59 Beijing time. The date of the joint live Q&A is pending.
 - The reported scores cover the public cases. Hidden-case grading is pending.
 

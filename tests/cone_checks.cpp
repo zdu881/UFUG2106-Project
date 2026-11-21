@@ -38,6 +38,13 @@ int main(int argc, char **argv) {
         if (!graph.valid) return 5;
         save(graph, std::string(argv[2]) + "-table" + std::to_string(op));
     }
+    for (int expensive : {1, 2}) {
+        auto previous = c.area[expensive];
+        c.area[expensive] = 3;
+        std::ofstream stream(std::string(argv[2]) + "-stream" + std::to_string(expensive));
+        StreamingMapper(c, stream).write();
+        c.area[expensive] = previous;
+    }
     round51::Truth data{c.n,c.m,1,1,1,1,1,1,c.table,c.table.influence};
     round51::Opt opt{"output-influence",false,true,false,1,0,true};
     opt.decoder = true;

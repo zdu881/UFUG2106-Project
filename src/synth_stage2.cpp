@@ -141,6 +141,124 @@ struct SearchMemory {
             throw Timeout{};
     }
 } search_memory;
+// Natural-order Shannon expansion written in topological order. Only the small
+// suffix functions are memoized, so the emitted gate count does not set peak RAM.
+class StreamingMapper {
+    struct Signal {
+        long long id, delay;
+    };
+    const Case &c;
+    std::ostream &out;
+    long long next, area = 0;
+    std::vector<Signal> inverted;
+    std::vector<Signal> lut[5];
+    struct RecentGate {
+        int op = 0;
+        long long a = 0, b = 0;
+        Signal value{};
+    };
+    std::vector<RecentGate> recent;
+
+    Signal emit(int op, Signal a, Signal b = {0, 0}) {
+        // Reuse selector terms across cofactors. Collisions only evict an entry.
+        RecentGate *slot = nullptr;
+        if (op) {
+            if (a.id > b.id)
+                std::swap(a, b);
+            uint64_t h = (uint64_t(a.id) * 1000003 + uint64_t(b.id)) * 3 + op;
+            h ^= h >> 17;
+            slot = &recent[h & (recent.size() - 1)];
+            if (slot->op == op && slot->a == a.id && slot->b == b.id)
+                return slot->value;
+        }
+        long long id = next++;
+        out << id << (op == 0 ? " NOT " : op == 1 ? " AND2 " : " OR2 ") << a.id;
+        if (op)
+            out << ' ' << b.id;
+        out << '\n';
+        area += c.area[op];
+        Signal value{id, std::max(a.delay, b.delay) + c.delay[op]};
+        if (slot)
+            *slot = {op, a.id, b.id, value};
+        return value;
+    }
+    Signal inverse(int x) {
+        if (!inverted[x].id)
+            inverted[x] = emit(0, {x, 0});
+        return inverted[x];
+    }
+    Signal select(int x, Signal lo, Signal hi) {
+        // -1 represents constant one until it is needed as a final output.
+        Signal v{x, 0};
+        if (lo.id == hi.id)
+            return lo;
+        if (lo.id == 0 && hi.id == -1)
+            return v;
+        if (lo.id == -1 && hi.id == 0)
+            return inverse(x);
+        if (lo.id == 0)
+            return emit(1, v, hi);
+        if (hi.id == 0)
+            return emit(1, inverse(x), lo);
+        if (lo.id == -1)
+            return emit(2, inverse(x), hi);
+        if (hi.id == -1)
+            return emit(2, v, lo);
+        bool products = c.area[1] <= c.area[2];
+        int inner = products ? 1 : 2;
+        Signal a = emit(inner, products ? inverse(x) : v, lo);
+        Signal b = emit(inner, products ? v : inverse(x), hi);
+        return emit(3 - inner, a, b);
+    }
+    Signal suffix(int bits, unsigned mask) {
+        if (!bits)
+            return {mask ? -1 : 0, 0};
+        Signal &cached = lut[bits][mask];
+        if (cached.id != -2)
+            return cached;
+        int half = 1 << (bits - 1);
+        Signal lo = suffix(bits - 1, mask & ((1u << half) - 1));
+        Signal hi = suffix(bits - 1, mask >> half);
+        return cached = select(c.n - bits + 1, lo, hi);
+    }
+    Signal build(int depth, size_t row, int j) {
+        int bits = c.n - depth;
+        if (bits <= 4) {
+            auto word = c.table.words[size_t(j) * c.table.column_words + row / 64];
+            unsigned mask = (word >> (row % 64)) & ((1u << (1 << bits)) - 1);
+            return suffix(bits, mask);
+        }
+        Signal lo = build(depth + 1, row, j);
+        if (!(c.table.support[j] & (uint32_t(1) << depth)))
+            return lo;
+        Signal hi = build(depth + 1, row + (size_t(1) << (bits - 1)), j);
+        return select(depth + 1, lo, hi);
+    }
+
+  public:
+    StreamingMapper(const Case &c, std::ostream &out)
+        : c(c), out(out), next(c.n + 1), inverted(c.n + 1), recent(1u << std::min(c.n, 15)) {
+        for (int k = 1; k <= std::min(c.n, 4); ++k)
+            lut[k].assign(1u << (1 << k), {-2, 0});
+    }
+    void write() {
+        std::vector<long long> ids(c.m);
+        long long delay = 0;
+        for (int j = 0; j < c.m; ++j) {
+            Signal s = build(0, 0, j);
+            if (s.id == -1)
+                s = inverse(0);
+            ids[j] = s.id;
+            delay = std::max(delay, s.delay);
+        }
+        for (int j = 0; j < c.m; ++j)
+            out << (j ? " " : "") << ids[j];
+        out << '\n';
+        std::cerr << "candidates=1 area=" << area << " delay=" << delay << " target=" << c.target
+                  << " ram_search_stopped=1 streaming=1\n";
+    }
+};
+
 struct BNode {
     int var, lo, hi;
 };
@@ -207,7 +325,7 @@ class BDD {
 
   public:
     int build(int depth, size_t row, int output) {
-        if ((++calls & 8191) == 0 && deadline != Clock::time_point::max()) {
+        if ((++calls & 8191) == 0 && (c.ram || deadline != Clock::time_point::max())) {
             search_memory.check();
             if (Clock::now() > deadline)
                 throw Timeout{};
@@ -290,7 +408,7 @@ class Mapper {
                (b > c.n && gates[b - c.n - 1].op == 0 && gates[b - c.n - 1].a == a);
     }
     int raw(int op, int a, int b = 0) {
-        if ((++calls & 1023) == 0 && deadline != Clock::time_point::max()) {
+        if ((++calls & 1023) == 0 && (c.ram || deadline != Clock::time_point::max())) {
             search_memory.check();
             if (Clock::now() > deadline)
                 throw Timeout{};
@@ -575,6 +693,9 @@ class Mapper {
         std::vector<int> outputs;
         for (int r : roots)
             outputs.push_back(map(r));
+        if (plain && c.ram && gates.size() >= 1024 &&
+            !search_memory.available(gates.size() * (sizeof(Gate) + sizeof(int) + 1)))
+            throw Timeout{};
         std::vector<unsigned char> used(gates.size());
         std::vector<int> stack = outputs;
         while (!stack.empty()) {
@@ -950,12 +1071,17 @@ int main(int argc, char **argv) {
             for (int j = 0; j < c.m; ++j)
                 roots.push_back(bdd.build(0, 0, j));
             if (plain_first) {
-                Mapper mapper(c, bdd, 0, false, true);
-                best = mapper.finish(roots);
+                {
+                    Mapper mapper(c, bdd, 0, false, true);
+                    best = mapper.finish(roots);
+                }
+                ++completed;
+                if (c.ram && best.gates.size() >= 1024 &&
+                    !search_memory.available(best.gates.size() * (2*sizeof(Gate) + sizeof(Key) + 4*sizeof(int))))
+                    return;
                 Net balanced = balance(best, c);
                 if (rank(balanced) < rank(best))
                     best = std::move(balanced);
-                ++completed;
                 return;
             }
             for (double w : weights) {
@@ -983,7 +1109,20 @@ int main(int argc, char **argv) {
             }
         };
         // Complete the fallback before starting optional search.
-        map_order(order, true, Clock::time_point::max(), {});
+        try {
+            map_order(order, true, Clock::time_point::max(), {});
+        } catch (const Timeout &) {
+            search_memory.stopped = true;
+        } catch (const std::bad_alloc &) {
+            search_memory.stopped = true;
+        }
+        if (best.outputs.empty()) {
+            std::ofstream output(argv[2]);
+            StreamingMapper(c, output).write();
+            output.close();
+            if (!output) throw std::runtime_error("output write failed");
+            return 0;
+        }
         auto write_best = [&]() {
             std::ofstream output(argv[2]);
             best.write(output);

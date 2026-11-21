@@ -30,6 +30,8 @@ class ConeChoices(unittest.TestCase):
                     subprocess.run([exe, inp, out], check=True)
                     if n == 2:
                         self.assertEqual(verify(inp, d/"out-mixed")["area"], 3)
+                    for expensive in (1, 2):
+                        self.assertTrue(verify(inp, d/f'out-stream{expensive}')['valid'])
                     for regular in (0, 1):
                         self.assertTrue(verify(inp, d/f'out{regular}')['valid'])
                         self.assertTrue(verify(inp, d/f'out-table{regular}')['valid'])

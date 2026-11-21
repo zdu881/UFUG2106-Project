@@ -1,0 +1,22 @@
+{
+  "Submitted Stage 1": {
+    "targets": 50,
+    "area": 1206033,
+    "total_ms": 39886.594
+  },
+  "Round 5.1": {
+    "targets": 50,
+    "area": 1038445,
+    "total_ms": 15903.298
+  },
+  "Revised schedule": {
+    "targets": 50,
+    "area": 872632,
+    "total_ms": 32869.723
+  },
+  "Memory-aware mapping": {
+    "targets": 50,
+    "area": 872632,
+    "total_ms": 32862.445
+  }
+}
