@@ -66,3 +66,16 @@ The archive also retains the group's separate Round 5.1 research source
 and experiment records. The official Stage 1 comparator is the source
 uploaded to Canvas on 17 November.
 [Materials commit](https://github.com/Jincan-LI-HUB/Truth-Table-to-Circuit-Discrete-Math-Project/commit/866add1c0a94d863870ccdf00791f4617f8818b3)
+
+## 24 November — four-leaf cut integration
+
+Zeyun DU requested integration with Jincan Li's research repository. The
+upstream R10.0 submission supplied the SOP cut implementation; the R10.1
+audit supplied the comparison of root quotas and time budgets. Codex adapted
+the pass to the integrated solver and ran the local comparisons. No teammate
+review or approval of this version has been recorded.
+
+The [research report’s contribution statement](https://github.com/Jincan-LI-HUB/Truth-Table-to-Circuit-Discrete-Math-Project/blob/4838e50d52408087639c3d3816b10761f18f6ccb/Stage%202%20Formal%20Report/main.tex#L497-L499) records the individual research work.
+
+- **Jincan Li** developed the independent R1–R6.1 investigations, including frozen R5.1, and designed, implemented, evaluated and selected the Stage 2 research solver through R10.0.
+- **Zeyun DU** produced the submitted Stage 1 solution and provided Stage 2 technical review and suggestions. He later requested the local integration. Codex adapted the mapper and ran the integrated candidate’s verification.

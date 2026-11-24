@@ -1,0 +1,12 @@
+# Shared-factor experiment
+
+The previous SOP release is the control. Develop on the 24-case transfer diagnostic. Freeze the candidate ZIP before generating the new-family bank or inspecting its outcomes. No solver changes after holdout results. Compare the extracted binaries using the same official evaluator and independent full truth-table replay.
+
+New-family bank: unsigned magnitude/equality comparators, priority encoders and enabled counters; two input permutations; three gate price profiles. Use witness delay, 300 ms per process and 64 MiB per case. The 18 cases are variations of three designs. Also rerun both public banks, the 26 tightened public cases, and the existing dense 32/48/64 MiB plus structured 64 MiB controls. Run the current unit and generated regression suites. Record failures and per-case area, delay and process runtime. Adopt only if the public validity and timing targets hold, resource controls show no new failures and the diagnostic improves. Report transfer performance separately, including ties.
+
+## Reproduction and evidence
+
+- Run `make stage2-source`, extract the ZIP and follow its README. The two exact archives used here are in the local run directory `results/factors-20261124-qh2DXN/{baseline,candidate}.zip`.
+- Run `python3 reports/stage2-factors-20261124/holdout.py NEW_DIR` for the three new designs. Run the course evaluator on each case bank for each binary, then pass its saved outputs and CSV to `tools/verify_all.py`. Evaluate each resource control by its explicit file path.
+- [measurements.csv](measurements.csv) records both binaries on 122 paired cases. [paired.csv](paired.csv) measures only the finishing pass on the same incumbent. Apply [paired.patch](paired.patch) to the extracted candidate to reproduce the instrumentation. The adder witness is case 013 in the [diagnostic generator](../stage2-transfer-20261124/generate.py). Candidate gates 22, 32 and 42 matched its intermediate carries (witness gates 23, 34 and 45) on all 4,096 rows, and each was read three times.
+- The direct 64 MiB checks used `prlimit --as=67108864` and exhaustive replay. The current official evaluator returned MEMORY_LIMIT on the structured control for both releases. All 92 generated tests and 22 unit tests passed, including direct replay of the factor candidate. The [report](UFUG2106_Group2_Stage2_Report.pdf) includes the original Stage 1 comparator and describes the remaining gap.

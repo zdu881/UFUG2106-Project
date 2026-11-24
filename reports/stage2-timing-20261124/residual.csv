@@ -1,0 +1,9 @@
+variant,case,valid,area,delay,target
+Released candidate,case_003.txt,True,2105,28,27
+Alternative input order,case_003.txt,True,2259,28,27
+Extra XOR mappings,case_003.txt,True,2259,28,27
+XOR phase transfer,case_003.txt,True,1968,28,27
+All balanced masks up to 14 inputs,case_003.txt,True,2105,28,27
+Boolean derivative expansion,case_003.txt,True,2105,28,27
+Factor splits with up to 6 shared pins,case_003.txt,True,2119,28,27
+Generating witness,case_003.txt,True,550,27,27

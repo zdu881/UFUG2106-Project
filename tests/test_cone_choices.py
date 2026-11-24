@@ -28,8 +28,12 @@ class ConeChoices(unittest.TestCase):
                     inp.write_text(f'{n}\n{len(rows[0])}\n' + ' '.join(rows) +
                                    '\n1 1\n1 1\n1 1\n70\n')
                     subprocess.run([exe, inp, out], check=True)
+                    self.assertTrue(verify(inp, d/"out-factors")['valid'])
+                    self.assertTrue(verify(inp, d/"out-cofactors")["valid"])
                     if n == 2:
+                        self.assertEqual(verify(inp, d/"out-timing")["delay"], 1)
                         self.assertEqual(verify(inp, d/"out-mixed")["area"], 3)
+                        self.assertLess(verify(inp, d/"out-cuts")["area"], 6)
                     for expensive in (1, 2):
                         self.assertTrue(verify(inp, d/f'out-stream{expensive}')['valid'])
                     for regular in (0, 1):

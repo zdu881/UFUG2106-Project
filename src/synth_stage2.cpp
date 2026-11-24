@@ -846,6 +846,8 @@ Net balance(const Net &in, const Case &c) {
 
 #include "round51/synthesis.hpp"
 #include "round51/shallow_table.hpp"
+#include "round51/r84_cut.hpp"
+#include "round51/critical_cuts.hpp"
 
 static bool round51_supports(const Case &c) {
     // The research mapper uses int arrival times and prices.
@@ -865,6 +867,51 @@ static r51::Graph typed_net(const Net &net) {
     for (int v : net.outputs) graph.outputs.push_back(id(v));
     return graph;
 }
+
+static Net from_typed(const r51::Graph &g, const r51::Metric &score) {
+    Net candidate{};
+    candidate.n = g.n;
+    candidate.area = score.area;
+    candidate.delay = score.delay;
+    candidate.outputs = g.outputs;
+    for (size_t id = g.n + 1; id < g.nodes.size(); ++id) {
+        auto gate = g.nodes[id];
+        candidate.gates.push_back({(gate.op + 1) % 3, gate.a, gate.b, 0});
+    }
+    return candidate;
+}
+
+#include "round51/cofactor_timing.hpp"
+
+// R10.0's four-leaf SOP rewrite runs after the existing search, on its winner.
+static void polish_cuts(const Case &c, Clock::time_point start, Net &best) {
+    if (c.ram || !round51_supports(c) || best.delay > c.target || best.gates.empty()) return;
+    // The cut library counts costs of up to 80 gates in signed integers.
+    if (*std::max_element(c.area, c.area + 3) > INT_MAX / 81) return;
+    const double elapsed = std::chrono::duration<double, std::milli>(Clock::now() - start).count();
+    const double allowance = c.limit ? std::min({90.0, 0.06 * c.limit, 0.82 * c.limit - elapsed}) : 90.0;
+    if (allowance < 8 || best.gates.size() > 20000) return;
+    const r51::Costs costs{int(c.area[1]), int(c.delay[1]), int(c.area[2]),
+                           int(c.delay[2]), int(c.area[0]), int(c.delay[0])};
+    auto trial = r84cut::rewrite(typed_net(best), costs, int(c.target),
+                                 "sop", allowance, 1500, "priority_topq", 160);
+    auto score = trial.graph.metric(costs);
+    if (score.valid && score.delay <= c.target && score.area < best.area)
+        best = from_typed(trial.graph, score);
+}
+
+// Preserve the smallest legal circuit seen while searching for extra timing slack.
+struct CompactChoice {
+    long long target;
+    Net net{};
+    bool smaller(long long area, long long delay) const {
+        return delay <= target && (net.outputs.empty() ||
+            std::tie(area, delay) < std::tie(net.area, net.delay));
+    }
+    void observe(const Net &candidate) {
+        if (smaller(candidate.area, candidate.delay)) net = Net(candidate);
+    }
+};
 
 // Both graphs implement the same output vector. Switch one output at a time,
 // charging a gate only while a live output or live parent still references it.
@@ -944,8 +991,37 @@ static r51::Graph mix_outputs(const Case &c, const Net &best, const r51::Graph &
     return changed ? joined.finish(std::move(chosen)) : r51::Graph{};
 }
 
+#include "round51/shared_factors.hpp"
+
+// Compare the shared-factor implementation on the same complete-circuit metrics.
+static void try_shared_factors(const Case &c, Clock::time_point start, Net &best) {
+    if (c.m < 2 || c.m > 32 || !round51_supports(c) || best.gates.size() > 20000 ||
+        !search_memory.available(2 * 1024 * 1024 + best.gates.size()*256)) return;
+    if (std::none_of(c.table.support.begin(), c.table.support.end(),
+                     [](uint32_t m) { return __builtin_popcount(m) <= 10; })) return;
+    auto now = Clock::now();
+    auto end = now + std::chrono::milliseconds(15);
+    if (c.limit) end = std::min(end, start + std::chrono::milliseconds(c.limit / 5 * 4));
+    if (now >= end) return;
+    const r51::Costs costs{int(c.area[1]), int(c.delay[1]), int(c.area[2]),
+                           int(c.delay[2]), int(c.area[0]), int(c.delay[0])};
+    auto incumbent = typed_net(best);
+    SharedFactors search(c, incumbent, costs, end);
+    auto graph = search.run(incumbent);
+    if (!graph.valid) return;
+    auto mixed = mix_outputs(c, best, graph, costs, end);
+    auto rank = [&](long long area, long long delay) {
+        return std::make_tuple(std::max(0LL, delay - c.target), area, delay);
+    };
+    for (auto *g : {&graph, &mixed}) {
+        auto score = g->metric(costs);
+        if (score.valid && rank(score.area, score.delay) < rank(best.area, best.delay))
+            best = from_typed(*g, score);
+    }
+}
+
 // Compare completed Round 5.1 circuits in the same units as the BDD search.
-static void search_round51(const Case &c, Clock::time_point end, Net &best, size_t &completed) {
+static void search_round51(const Case &c, Clock::time_point end, Net &best, size_t &completed, CompactChoice &compact) {
     if (!search_memory.available() || Clock::now() >= end) return;
     round51::Truth data{c.n, c.m, int(c.area[1]), int(c.delay[1]), int(c.area[2]),
                         int(c.delay[2]), int(c.area[0]), int(c.delay[0]), c.table, c.table.influence};
@@ -957,17 +1033,9 @@ static void search_round51(const Case &c, Clock::time_point end, Net &best, size
         auto score = g.metric(costs);
         if (!score.valid) return;
         ++completed;
+        if (compact.smaller(score.area, score.delay)) compact.net = from_typed(g, score);
         if (rank(score.area, score.delay) >= rank(best.area, best.delay)) return;
-        Net candidate{};
-        candidate.n = c.n;
-        candidate.area = score.area;
-        candidate.delay = score.delay;
-        candidate.outputs = g.outputs;
-        for (size_t id = c.n + 1; id < g.nodes.size(); ++id) {
-            auto gate = g.nodes[id];
-            candidate.gates.push_back({(gate.op + 1) % 3, gate.a, gate.b, 0});
-        }
-        best = std::move(candidate);
+        best = from_typed(g, score);
     };
     if (best.delay > c.target) {
         // Keep time for the variable-order portfolio even on a dense table.
@@ -1043,9 +1111,14 @@ int main(int argc, char **argv) {
         if (argc != 3)
             throw std::runtime_error("usage: synth INPUT OUTPUT");
         Case c(argv[1]);
+        const long long stated_target = c.target;
+        // Gate delays are integer-valued. Reserve one unit during synthesis.
+        c.target = std::max(1LL, stated_target - 1);
+        // A RAM-constrained case stores only its primary incumbent.
+        CompactChoice compact{c.ram ? -1 : stated_target};
         search_memory.limit_kib = c.ram;
         // Search is deterministic in order; deadline truncates it on constrained cases.
-        double budget_ms = c.limit > 0 ? std::min(1800.0, 0.45 * double(c.limit)) : 1800.0;
+        double budget_ms = c.limit > 0 ? std::min(3300.0, 0.45 * double(c.limit)) : 1800.0;
         auto end = start + std::chrono::microseconds(static_cast<long long>(budget_ms * 1000));
         const bool use_round51 = round51_supports(c);
         auto deadline = use_round51 ? start + (end - start) / 2 : end;
@@ -1079,7 +1152,9 @@ int main(int argc, char **argv) {
                 if (c.ram && best.gates.size() >= 1024 &&
                     !search_memory.available(best.gates.size() * (2*sizeof(Gate) + sizeof(Key) + 4*sizeof(int))))
                     return;
+                compact.observe(best);
                 Net balanced = balance(best, c);
+                compact.observe(balanced);
                 if (rank(balanced) < rank(best))
                     best = std::move(balanced);
                 return;
@@ -1092,6 +1167,8 @@ int main(int argc, char **argv) {
                 Net candidate = mapper.finish(roots);
                 ++completed;
                 Net balanced = balance(candidate, c);
+                compact.observe(candidate);
+                compact.observe(balanced);
                 if (rank(balanced) < rank(candidate))
                     candidate = std::move(balanced);
                 bool meets_target = candidate.delay <= c.target;
@@ -1117,6 +1194,7 @@ int main(int argc, char **argv) {
             search_memory.stopped = true;
         }
         if (best.outputs.empty()) {
+            c.target = stated_target;
             std::ofstream output(argv[2]);
             StreamingMapper(c, output).write();
             output.close();
@@ -1129,7 +1207,7 @@ int main(int argc, char **argv) {
             output.close();
             if (!output) throw std::runtime_error("output write failed");
             std::cerr << "candidates=" << completed << " area=" << best.area << " delay=" << best.delay
-                      << " target=" << c.target << " ram_search_stopped=" << search_memory.stopped << '\n';
+                      << " target=" << stated_target << " ram_search_stopped=" << search_memory.stopped << '\n';
         };
         if (best.area == 0 && best.delay == 0) {
             write_best();
@@ -1267,11 +1345,84 @@ int main(int argc, char **argv) {
         }
         try {
             if (use_round51)
-                search_round51(c, end, best, completed);
+                search_round51(c, end, best, completed, compact);
         } catch (const round51::CandidateTimeout &) {
             // Completed candidates are already in best.
         } catch (const std::bad_alloc &) {
             search_memory.stopped = true;
+        }
+        try {
+            polish_cuts(c, start, best);
+            try_shared_factors(c, start, best);
+        } catch (const Timeout &) {
+            // Keep the completed incumbent when the optional factor search expires.
+        } catch (const std::bad_alloc &) {
+            search_memory.stopped = true;
+        }
+        if (!compact.net.outputs.empty() && rank(compact.net) < rank(best))
+            std::swap(best, compact.net);
+        const double elapsed = std::chrono::duration<double, std::milli>(Clock::now() - start).count();
+        const double budget = c.limit ? std::min(100.0, 0.72 * c.limit - elapsed) : 100.0;
+        if (budget > 2 && round51_supports(c)) {
+            auto now = Clock::now();
+            auto end = now + std::chrono::microseconds(static_cast<long long>(budget * 1000));
+            const r51::Costs costs{int(c.area[1]), int(c.delay[1]), int(c.area[2]),
+                                   int(c.delay[2]), int(c.area[0]), int(c.delay[0])};
+            auto consider = [&](const r51::Graph &trial) {
+                auto score = trial.metric(costs);
+                if (!score.valid) return;
+                auto candidate = from_typed(trial, score);
+                if (rank(candidate) < rank(best)) best = std::move(candidate);
+            };
+            try {
+                const bool cheaper = !compact.net.outputs.empty() && compact.net.area < best.area;
+                const Net &late = cheaper ? compact.net : best;
+                if (late.delay > c.target && late.delay < INT_MAX / 2 && late.gates.size() < 100000 &&
+                    search_memory.available(2 * 1024 * 1024 + late.gates.size() * 600)) {
+                    auto graph = typed_net(late);
+                    auto until = cheaper ? now + (end - now) * 4 / 5 : end;
+                    long long delay = late.delay;
+                    while (Clock::now() < until && delay > c.target) {
+                        auto trial = critical_cuts(graph, costs, int(c.target), until);
+                        auto score = trial.metric(costs);
+                        if (!score.valid || score.delay >= delay) break;
+                        delay = score.delay;
+                        consider(trial);
+                        graph = std::move(trial);
+                    }
+                }
+                if (cheaper && c.m > 1 && Clock::now() < end)
+                    consider(mix_outputs(c, best, typed_net(compact.net), costs, end));
+            } catch (const std::bad_alloc &) {
+                search_memory.stopped = true;
+            }
+        }
+        if (best.delay > stated_target && best.delay <= INT_MAX / 2 && round51_supports(c) &&
+            best.gates.size() < 16000 && search_memory.available(6 * 1024 * 1024 + best.gates.size() * 160)) {
+            const double spent = std::chrono::duration<double, std::milli>(Clock::now() - start).count();
+            const double ms = c.limit ? std::min(160.0, 0.78 * c.limit - spent) : 160.0;
+            if (ms > 2) {
+                const r51::Costs costs{int(c.area[1]), int(c.delay[1]), int(c.area[2]),
+                                       int(c.delay[2]), int(c.area[0]), int(c.delay[0])};
+                try {
+                    auto until = Clock::now() + std::chrono::microseconds(static_cast<long long>(ms * 1000));
+                    auto trial = rescue_late_outputs(c, best, costs, int(stated_target), until);
+                    auto score = trial.metric(costs);
+                    if (score.valid && score.delay > stated_target && Clock::now() < until &&
+                        search_memory.available(2 * 1024 * 1024 + trial.nodes.size() * 600)) {
+                        auto balanced = r51::rebalance(trial, costs);
+                        auto faster = critical_cuts(balanced, costs, int(stated_target), until);
+                        for (auto *alternative : {&balanced, &faster}) {
+                            auto next = alternative->metric(costs);
+                            if (next.valid && std::tie(next.delay, next.area) < std::tie(score.delay, score.area)) {
+                                trial = std::move(*alternative);
+                                score = next;
+                            }
+                        }
+                    }
+                    if (score.valid && score.delay < best.delay) best = from_typed(trial, score);
+                } catch (const std::bad_alloc &) { search_memory.stopped = true; }
+            }
         }
         write_best();
     } catch (const std::exception &e) {

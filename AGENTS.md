@@ -5,7 +5,7 @@ Entry point for coding agents. Read `docs/WORKSPACE_HANDOFF.md` and
 
 ## Repository
 
-Remote: https://github.com/zdu881/UFUG2106-Project (private).
+Remote: https://github.com/zdu881/UFUG2106-Project (public).
 The real workspace is `/home/nyz/2106Proj`; the former Canvas project path is a
 compatibility symlink. Do not modify the surrounding Canvas-monitor repository
 as part of this project.

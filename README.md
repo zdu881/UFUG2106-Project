@@ -3,12 +3,20 @@
 ## Stage 2 public comparison
 
 Build the integrated solver with `make stage2`, then run `./build/synth_stage2 INPUT OUTPUT`.
-The Stage 2 solver searches variable orders and chooses output circuits by their
-mapped area and delay, counting shared gates once. If memory runs short before
-the first circuit is complete, it writes gates in dependency order using bounded
-lookup tables. The retested source ZIP passed all 50 released cases and all delay
-targets. Area and delay matched the preceding candidate on every case. The total
-area was 872,632 and total synthesis time was 32.86 s on this workstation.
+Stage 2 shares gates across outputs, rewrites four-input cuts and reserves one
+integer delay unit where possible. It can recover cheaper output cones and
+remap late paths while preserving the complete circuit’s delay ranking.
+
+Three full runs of the extracted ZIP gave combined public areas of 884,234, 876,694, 876,694.
+All 150 circuits passed official evaluation and full truth-table replay with
+at least one unit of delay slack. The maximum runtime was 49.7% of an
+input's limit. Direct-process peak RSS across the 50 public inputs was 44.9 MiB.
+Late outputs can be remapped by exact cofactors, Boolean covers and balanced
+input partitions. The final solver met 168/168 timing targets on the
+development banks and 83/84 on six validation banks. Each seed repeats two
+exact-delay controls; hidden grading remains pending.
+
+The teaching team confirmed that all grading cases omit `ram_limit` and that the server has 48 GB of RAM. Replaying the remaining timing miss with that field omitted gave delay 28 against a target of 27.
 
 On three generated dense tables, with 32, 48 and 64 MiB limits, the old solver
 failed official evaluation and the new one passed. All three new circuits also
@@ -20,18 +28,24 @@ measures the solver below the limit and detects a real over-limit process.
 [Reproducer and measurements](reports/stage2-rss-accounting-20261121/README.md)
 
 Run `make stage2-source` to create `artifacts/UFUG2106_Group2_Stage2_Source.zip`.
-Rebuild the report with Python and ReportLab:
+Rebuild the current report from its editable source:
 
 ```sh
-python3 tools/report_public_comparison.py reports/stage2-memory-20261121 /tmp/ufug2106-report.pdf --merged
+weasyprint reports/stage2-timing-20261124/report.html /tmp/ufug2106-stage2.pdf
 ```
 
-[Report](reports/stage2-memory-20261121/UFUG2106_Group2_Stage2_Report.pdf) ·
-[Stage 1 comparison](reports/stage2-memory-20261121/comparison.json) ·
+[Stage 2 report](reports/stage2-timing-20261124/UFUG2106_Group2_Stage2_Report.pdf) ·
+[Current acceptance runs](reports/stage2-timing-20261124/public-runs.csv) ·
+[Resource and stress evidence](reports/stage2-timing-20261124/README.md) ·
+[Previous shared-factor comparison](reports/stage2-factors-20261124/measurements.csv) ·
+[Within-run factor costs and gains](reports/stage2-factors-20261124/paired.csv) ·
+[Prior four-method public results](reports/stage2-cuts-20261124/casewise.csv) ·
+[Paired rewrite effects](reports/stage2-cuts-20261124/paired.csv) ·
+[Generalization and delay sensitivity](reports/stage2-transfer-20261124/README.md) ·
 [Memory controls](reports/stage2-memory-20261121/memory-controls.json) ·
 [Dense input generator](reports/stage2-memory-20261121/generate_dense.py) ·
 [Prior variable-order and output-selection experiments](reports/stage2-schedule-20261121/UFUG2106_Group2_Stage2_Report.pdf) ·
-[Round 5.1 attribution](src/round51/ORIGIN.md)
+[Round 5.1 and R10.0 attribution](src/round51/ORIGIN.md)
 
 Workspace: `~/2106Proj`. Coding-agent entry: [AGENTS.md](AGENTS.md);
 [OpenCode handoff](docs/WORKSPACE_HANDOFF.md).
@@ -92,7 +106,7 @@ The selection criterion is delay-excess first, then area, then delay; runtime is
 
 ## Remaining project gates
 
-- The [Stage 2 report](reports/stage2-memory-20261121/UFUG2106_Group2_Stage2_Report.pdf) compares the submitted Stage 1 method with the Stage 2 candidate on all 50 released inputs.
+- The [Stage 2 report](reports/stage2-timing-20261124/UFUG2106_Group2_Stage2_Report.pdf) compares the submitted Stage 1 method with the Stage 2 candidate on all 50 released inputs.
 - Stage 2 is due on 4 December at 23:59 Beijing time. The date of the joint live Q&A is pending.
 - The reported scores cover the public cases. Hidden-case grading is pending.
 

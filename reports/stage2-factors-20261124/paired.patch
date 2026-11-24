@@ -1,0 +1,19 @@
+--- a/synth_stage2.cpp
++++ b/synth_stage2.cpp
+@@ -1326,7 +1326,15 @@
+         }
+         try {
+             polish_cuts(c, start, best);
+-            try_shared_factors(c, start, best);
++            auto before = best.area;
++            auto previous_delay = best.delay;
++            auto begin_factor = Clock::now();
++            try {
++                try_shared_factors(c, start, best);
++            } catch (const Timeout &) {}
++            auto micros = std::chrono::duration_cast<std::chrono::microseconds>(Clock::now()-begin_factor).count();
++            std::cerr << "factor_probe " << before << " " << best.area << " "
++                      << previous_delay << " " << best.delay << " " << micros << "\n";
+         } catch (const Timeout &) {
+             // Keep the completed incumbent when the optional factor search expires.
+         } catch (const std::bad_alloc &) {

@@ -307,3 +307,30 @@ Codex checked the live assignment attachment, reproduced the official result wit
 the extracted submission source, and built a separate zero-gate example. Paired
 launcher tests included a genuine 80 MiB control. An English teaching-team note
 and reproducible evidence are in the [diagnostic directory](../reports/stage2-rss-accounting-20261121/README.md).
+
+## 24 November — Stage 2 cut experiment
+
+Codex adapted the upstream SOP pass to the existing typed circuit, added a
+direct equivalence/area regression and prepared the four-method public
+comparison. The upstream implementation and local integration are attributed
+separately in src/round51/ORIGIN.md.
+
+## 24 November — shared-factor trial
+
+At Zeyun DU’s request, Codex implemented cofactor-based cross-output factoring,
+froze the candidate before new-family testing, verified the releases and prepared
+the [casewise comparison](../reports/stage2-factors-20261124/measurements.csv).
+
+## 24 November — public area ceiling and timing reserve
+
+At Zeyun DU’s direction, Codex tested delay reserves under a 900,000 aggregate area ceiling, adapted the R10 cut routines to late paths, and checked the packaged executable under the official evaluator and independent replay. [Case-level evidence](../reports/stage2-headroom-20261124/README.md).
+
+## 24 November — Stage 2 timing rescue
+
+At Zeyun DU's request, Codex implemented and tested cofactor-based timing repair,
+bounded scratch reuse, cut remapping and additional balanced partitions.
+Three extracted-ZIP public runs yielded 884,234, 876,694, 876,694; the final fresh stress
+banks met 83/84 timing targets. The 64 MiB structured case still
+failed the official memory check. See the [tests and development record](../reports/stage2-timing-20261124/README.md).
+
+On 24 November Codex replayed the remaining timing miss with the RAM field omitted, checked additional cover implementations, and retained the previously verified source ZIP. Both settings gave delay 28 against 27. The report incorporates the teaching team's 22 November clarification on the 48 GB grading server.

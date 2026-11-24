@@ -25,17 +25,35 @@ int main(int argc, char **argv) {
     b.nodes.insert(b.nodes.end(), {{1,1,2},{2,1,0},{2,2,0},{1,4,5},{2,6,0},{2,0,0}});
     b.outputs = {7,3,8,8};
     if (c.n == 2 && c.m == 4) {
+        auto faster = critical_cuts(b, unit, 1, Clock::time_point::max());
+        if (faster.metric(unit).delay != 1) return 8;
+        save(faster, std::string(argv[2]) + "-timing");
         auto hybrid = mix_outputs(c, a, b, unit, Clock::time_point::max());
         auto metrics = hybrid.metric(unit);
         if (!metrics.valid || metrics.area != 3 || metrics.delay != 1) return 2;
         if (hybrid.outputs[2] != hybrid.outputs[3]) return 3;
         save(hybrid, std::string(argv[2]) + "-mixed");
+        polish_cuts(c, Clock::now(), a);
+        if (a.area >= 6 || a.delay > c.target) return 6;
+        std::ofstream polished(std::string(argv[2]) + "-cuts");
+        a.write(polished);
     }
+    r51::Builder builder(r51::Graph(c.n, c.m));
+    CofactorTiming search(builder, unit, Clock::time_point::max());
+    std::vector<int> roots;
+    for (int j = 0; j < c.m; ++j) roots.push_back(search.output(c, j, int(c.target)));
+    save(builder.finish(std::move(roots)), std::string(argv[2]) + "-cofactors");
     for (int op = 0; op < 2; ++op) {
         auto costs = unit;
         if (op == 1) costs.da = 2;
         auto graph = shallow_table(c, costs, Clock::time_point::max());
         if (!graph.valid) return 5;
+        if (op == 0) {
+            SharedFactors factors(c, graph, costs, Clock::time_point::max());
+            auto shared = factors.run(graph);
+            if (!shared.valid) return 7;
+            save(shared, std::string(argv[2]) + "-factors");
+        }
         save(graph, std::string(argv[2]) + "-table" + std::to_string(op));
     }
     for (int expensive : {1, 2}) {

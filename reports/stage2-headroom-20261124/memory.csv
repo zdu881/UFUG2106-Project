@@ -1,0 +1,5 @@
+case,ram_kib,official,reason,peak_kib,direct_assignments
+dense17.txt,32768,PASS,,22800,131072
+dense18.txt,49152,PASS,,36032,262144
+dense19.txt,65536,PASS,,50488,524288
+structured20.txt,65536,FAIL,MEMORY_LIMIT,10116,1048576

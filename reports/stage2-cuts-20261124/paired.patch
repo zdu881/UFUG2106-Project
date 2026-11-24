@@ -1,0 +1,12 @@
+--- a/src/synth_stage2.cpp
++++ b/src/synth_stage2.cpp
+@@ -1296,7 +1296,9 @@
+             search_memory.stopped = true;
+         }
+         try {
++            const auto before = best.area;
+             polish_cuts(c, start, best);
++            std::cerr << "paired_area " << before << " " << best.area << "\n";
+         } catch (const std::bad_alloc &) {
+             search_memory.stopped = true;
+         }

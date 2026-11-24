@@ -19,7 +19,7 @@ based on the 10 November measurements.
 ## Start here
 
 Real repository: `/home/nyz/2106Proj` (`~/2106Proj`).
-Remote: https://github.com/zdu881/UFUG2106-Project (private), default branch `main`.
+Remote: https://github.com/zdu881/UFUG2106-Project (public), default branch `main`.
 The former path `/home/nyz/canvasmonitor/projects/ufug2106` now points here via a symlink.
 There is only one working repository, not two diverging copies.
 
@@ -139,3 +139,30 @@ The current candidate is the streaming-memory revision. Its four-page
 [report](../reports/stage2-memory-20261121/UFUG2106_Group2_Stage2_Report.pdf)
 and source ZIP use the build and reproduction commands at the top of the README.
 The repository was set to private before the full Stage 2 materials were pushed.
+
+## 24 November — R10.0 cut integration
+
+The current [report](../reports/stage2-cuts-20261124/UFUG2106_Group2_Stage2_Report.pdf)
+and `make stage2-source` delivery include the SOP finishing pass. The
+[public comparison](../reports/stage2-cuts-20261124/casewise.csv) covers four
+executables. The [paired measurements](../reports/stage2-cuts-20261124/paired.csv)
+hold the circuit entering the pass fixed. For the measurement build, apply
+`reports/stage2-cuts-20261124/paired.patch` to a copy of the current source.
+It emits pre- and post-pass area on stderr for each public case.
+
+## 24 November — shared Boolean factors
+
+The [current report](../reports/stage2-factors-20261124/UFUG2106_Group2_Stage2_Report.pdf)
+and `make stage2-source` include the cofactor-based pass. See the
+[protocol](../reports/stage2-factors-20261124/protocol.md) and
+[paired release measurements](../reports/stage2-factors-20261124/measurements.csv).
+Both versions still fail the official structured 64 MiB control.
+
+## 24 November — area and delay acceptance
+
+The [current report](../reports/stage2-headroom-20261124/UFUG2106_Group2_Stage2_Report.pdf) and the source ZIP built by `make stage2-source` use the one-unit working delay reserve, compact-circuit recovery and critical cut remapping. See the [reproduction and stress checks](../reports/stage2-headroom-20261124/README.md).
+
+## 24 November — current Stage 2 delivery
+
+Build with `make stage2-source`. The [current report and acceptance evidence](../reports/stage2-timing-20261124/README.md)
+cover public repeats, prospective stress banks and the outstanding official memory discrepancy.

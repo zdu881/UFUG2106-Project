@@ -1,0 +1,73 @@
+version,bank,role,valid,targets_met,misses
+Previous delivery,limits,development,14,11,case_005.txt case_011.txt case_012.txt
+Previous delivery,fresh,development,14,10,case_003.txt case_006.txt case_009.txt case_010.txt
+Pair cofactors,limits,development,14,12,case_011.txt case_012.txt
+Pair cofactors,fresh,development,14,10,case_003.txt case_006.txt case_009.txt case_010.txt
+Boolean bidecomposition,limits,development,14,12,case_011.txt case_012.txt
+Boolean bidecomposition,fresh,development,14,12,case_006.txt case_009.txt
+Implicant cover and grouped cofactors,limits,development,14,14,
+Implicant cover and grouped cofactors,fresh,development,14,14,
+Implicant cover and grouped cofactors,732751,prospective,14,14,
+Implicant cover and grouped cofactors,410931,prospective,14,13,case_008.txt
+Reclaim scratch gates between outputs,limits,development,14,14,
+Reclaim scratch gates between outputs,fresh,development,14,14,
+Reclaim scratch gates between outputs,732751,development,14,14,
+Reclaim scratch gates between outputs,410931,development,14,14,
+Reclaim scratch gates between outputs,851039,prospective,14,14,
+Reclaim scratch gates between outputs,647251,prospective,14,13,case_003.txt
+Support up to 14 inputs,limits,development,14,14,
+Support up to 14 inputs,fresh,development,14,14,
+Support up to 14 inputs,732751,development,14,14,
+Support up to 14 inputs,410931,development,14,14,
+Support up to 14 inputs,851039,development,14,14,
+Support up to 14 inputs,647251,development,14,14,
+Support up to 14 inputs,332809,prospective,14,14,
+Support up to 14 inputs,173391,prospective,14,14,
+Support up to 14 inputs,659237,prospective,14,14,
+Support up to 14 inputs,899911,prospective,14,13,case_002.txt
+Remap reconstructed critical paths,limits,development,14,14,
+Remap reconstructed critical paths,fresh,development,14,14,
+Remap reconstructed critical paths,732751,development,14,14,
+Remap reconstructed critical paths,410931,development,14,14,
+Remap reconstructed critical paths,851039,development,14,14,
+Remap reconstructed critical paths,647251,development,14,14,
+Remap reconstructed critical paths,332809,development,14,14,
+Remap reconstructed critical paths,173391,development,14,14,
+Remap reconstructed critical paths,659237,development,14,14,
+Remap reconstructed critical paths,899911,development,14,14,
+Remap reconstructed critical paths,521021,prospective,14,13,case_010.txt
+Remap reconstructed critical paths,937129,prospective,14,14,
+Balanced input partitions on small late cones,limits,development,14,14,
+Balanced input partitions on small late cones,fresh,development,14,14,
+Balanced input partitions on small late cones,732751,development,14,14,
+Balanced input partitions on small late cones,410931,development,14,14,
+Balanced input partitions on small late cones,851039,development,14,14,
+Balanced input partitions on small late cones,647251,development,14,14,
+Balanced input partitions on small late cones,332809,development,14,14,
+Balanced input partitions on small late cones,173391,development,14,14,
+Balanced input partitions on small late cones,659237,development,14,14,
+Balanced input partitions on small late cones,899911,development,14,14,
+Balanced input partitions on small late cones,521021,development,14,14,
+Balanced input partitions on small late cones,937129,development,14,14,
+Balanced input partitions on small late cones,112431,prospective,14,14,
+Balanced input partitions on small late cones,357139,prospective,14,14,
+Balanced input partitions on small late cones,711413,prospective,14,13,case_003.txt
+Balanced input partitions on small late cones,338111,prospective,14,14,
+Extended time window under explicit generous limits,limits,development,14,14,
+Extended time window under explicit generous limits,fresh,development,14,14,
+Extended time window under explicit generous limits,732751,development,14,14,
+Extended time window under explicit generous limits,410931,development,14,14,
+Extended time window under explicit generous limits,851039,development,14,14,
+Extended time window under explicit generous limits,647251,development,14,14,
+Extended time window under explicit generous limits,332809,development,14,14,
+Extended time window under explicit generous limits,173391,development,14,14,
+Extended time window under explicit generous limits,659237,development,14,14,
+Extended time window under explicit generous limits,899911,development,14,14,
+Extended time window under explicit generous limits,521021,development,14,14,
+Extended time window under explicit generous limits,937129,development,14,14,
+Extended time window under explicit generous limits,112431,development,14,14,
+Extended time window under explicit generous limits,357139,development,14,14,
+Extended time window under explicit generous limits,711413,development,14,13,case_003.txt
+Extended time window under explicit generous limits,338111,development,14,14,
+Extended time window under explicit generous limits,829543,prospective,14,14,
+Extended time window under explicit generous limits,526633,prospective,14,14,

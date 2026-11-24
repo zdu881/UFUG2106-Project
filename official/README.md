@@ -1,7 +1,6 @@
 # Instructor-provided materials
 
-Included at the user's request for collaboration in the private UFUG2106 project
-repository. These files were supplied by the course teaching team; they are not
+Originally included for course-team collaboration. The repository owner confirmed publication of the original repository on 24 November. These files were supplied by the course teaching team; they are not
 student-authored or AI-generated project work. No redistribution license is
 asserted. Keep the original attribution when sharing within the course team.
 
